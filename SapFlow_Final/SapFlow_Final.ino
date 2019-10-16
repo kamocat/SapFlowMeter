@@ -49,28 +49,9 @@ void setup()
 
 void loop() 
 {
-  digitalWrite(5, LOW); digitalWrite(6, HIGH); 
-  
-  Loom.Relay().set(false);
+  digitalWrite(5, LOW); digitalWrite(6, HIGH); // What does this do?
 
-  LPrintln("Reading Primary Sensors");
-  ((LoomSensor*)Loom.modules[0])->measure();
-  ((LoomSensor*)Loom.modules[1])->measure();
-  ((LoomSensor*)Loom.modules[2])->measure();
-
-  LPrintln("Heating");
-  Loom.Relay().set(true);
-
-  delay(3000);
-
-  Loom.Relay().set(false);
-
-  delay(57000);
-
-  LPrintln("Reading Secondary Sensors");
-  ((LoomSensor*)Loom.modules[3])->measure();
-  ((LoomSensor*)Loom.modules[4])->measure();
-  
+ 	Loom.measure();
 	Loom.package();
 	Loom.display_data();
 	
@@ -78,10 +59,12 @@ void loop()
 	// in this case, 'datafile.csv'
 	Loom.SDCARD().log();
 
-	// Or log to a specific file (does not change what default file is set to)	
-	// Loom.SDCARD().log("specific.csv");
+	/* Need a way of measuring time. We want the relay to be on
+	 * for a period of time, and then off for a period of time.
+	 * Configurable through the JSON file would be really nice.
+	 * Then we want the system to sleep until the RTC wakes it up again. */
+  Loom.Relay().set(true);
 
   LPrintln("Powering Down");
   digitalWrite(5, HIGH); digitalWrite(6, LOW);
-	Loom.nap(169000);
 }
