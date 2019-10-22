@@ -3,7 +3,7 @@
 	{\
 		'name':'Device',\
 		'instance':1,\
-		'interval':5000\
+		'interval':5\
 	},\
 	'components':[\
 		{\
@@ -11,26 +11,8 @@
 			'params':'default'\
 		},\
     {\
-      'name':'MAX31856',\
-      'params':['Top Probe', 1, 11, 10, 11, 12, 13]\
-    },\
-    {\
-      'name':'MAX31856',\
-      'params':['Bottom Probe', 1, 18, 10, 11, 12, 13]\
-    },\
-    {\
-      'name':'MAX31856',\
-      'params':['Top Probe Averaged', 100, 11, 10, 11, 12, 13]\
-    },\
-    {\
-      'name':'MAX31856',\
-      'params':['Bottom Probe Averaged', 100, 18, 10, 11, 12, 13]\
-    },\
-    {\
       'name':'Relay',\
-      'params':[\
-        13\
-      ]\
+      'params':[13]\
     },\
 		{\
 			'name':'SD',\
@@ -40,10 +22,6 @@
 			'name':'DS3231',\
 			'params':'default'\
 		},\
-   {\
-    'name':'Loom_Interrupt_Manager',\
-    'params':[13]\
-   },\
    {\
    'name':'Loom_Sleep_Manager',\
     'params':[true,false,1]\

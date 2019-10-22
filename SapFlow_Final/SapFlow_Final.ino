@@ -43,12 +43,13 @@ void setup()
 {
 
   pinMode(5, OUTPUT); pinMode(6, OUTPUT);
+  pinMode(12, INPUT_PULLUP);
 
   digitalWrite(5, LOW); digitalWrite(6, HIGH);
   
 	Loom.begin_serial(true);
 	Loom.parse_config(json_config);
-	Loom.print_config();
+	//Loom.print_config();
 
 	LPrintln("\n ** Setup Complete ** ");
 
@@ -59,7 +60,8 @@ void loop()
 {
  	Loom.measure();
 	Loom.package();
-	Loom.display_data();
+  delay(1); // Slow down the loop a little bit
+//	Loom.display_data();
 	// Log using default filename as provided in configuration
 	// in this case, 'datafile.csv'
 	Loom.SDCARD().log();
@@ -68,17 +70,19 @@ void loop()
   		digitalWrite(5, LOW); digitalWrite(6, HIGH); // Enable 5V and 3.3V rails
   		measuring_state = heating;
   		Loom.Relay().set(true);
+      LPrintln("Heater On");
   		//Set the alarm for heating time
-      t = Loom.DS3231().now() + TimeSpan(3);
+      t = Loom.DS3231().now() + TimeSpan(5);
   		Loom.DS3231().set_alarm( t );
   		break;
   	case heating:
   		if( !digitalRead(12) ){ // alarm went off
   			measuring_state = cooling;
   			//set the alarm for cooling time
-        t = t + TimeSpan(5);
+        t = t + TimeSpan(10);
   		  Loom.DS3231().set_alarm( t );
   			Loom.Relay().set(false);
+        LPrintln("Heater Off");
   		}
   		break;
   	case cooling:
@@ -92,9 +96,9 @@ void loop()
   		Loom.DS3231().set_alarm( t );
   		measuring_state = wake;
   		LPrintln("Powering Down");
-  		digitalWrite(5, HIGH); digitalWrite(6, LOW); // Disable 5V and 3.3V rails
-  		attachInterrupt(6, wakeISR, FALLING);
+  		//digitalWrite(5, HIGH); digitalWrite(6, LOW); // Disable 5V and 3.3V rails
+  		//attachInterrupt(6, wakeISR, FALLING);
   		//Sleep until interrupt
-      Loom.SleepManager().sleep();
+      //Loom.SleepManager().sleep();
   }
 }
