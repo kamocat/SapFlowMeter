@@ -1,12 +1,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 
-// This is a basic example that demonstrates how to log data to an SD card
-// using Loom.
+// This program samples lots of temperature data from a tree to measure the sap flow.
+// TODO: Configure the pulse and sleep timing from config.h so it can be configured on the SD card.
 
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <Loom.h>
-#include <OPEnS_RTC.h>
 
 // Include configuration
 const char* json_config = 
@@ -14,17 +13,12 @@ const char* json_config =
 ;
 
 enum state{
-	wake;
-	heating;
-	cooling;
-	sleep;
+	wake,
+	heating,
+	cooling,
+	sleep
 } measuring_state;
 
-Datetime t;
-RTC_DS3231 rtc;
-const TimeSpan heating_time = TimeSpan(2);
-const TimeSpan cooling_time = TimeSpan(5);
-const TimeSpan sleep_time = TimeSpan(3);
 
 // Set enabled modules
 LoomFactory<
@@ -36,6 +30,8 @@ LoomFactory<
 > ModuleFactory{};
 
 LoomManager Loom{ &ModuleFactory };
+
+DateTime t;
 
 // Detach interrupt on wake
 void wakeISR() { 
@@ -56,9 +52,6 @@ void setup()
 
 	LPrintln("\n ** Setup Complete ** ");
 
- for(auto module : Loom.modules) {
-  LPrintln(module->module_name);
- }
  measuring_state = wake;
 }
 
@@ -75,15 +68,16 @@ void loop()
   		digitalWrite(5, LOW); digitalWrite(6, HIGH); // Enable 5V and 3.3V rails
   		measuring_state = heating;
   		Loom.Relay().set(true);
-  		//FIXME: Set the alarm for heating time
-  		t = rtc.now();
-  		t = t + heating_time;
-  		rtc.setAlarm(1, t.seconds(), t.minutes(), t.hours(), t.)
+  		//Set the alarm for heating time
+      t = Loom.DS3231().now() + TimeSpan(3);
+  		Loom.DS3231().set_alarm( t );
   		break;
   	case heating:
   		if( !digitalRead(12) ){ // alarm went off
   			measuring_state = cooling;
-  			//FIXME: set the alarm for cooling time
+  			//set the alarm for cooling time
+        t = t + TimeSpan(5);
+  		  Loom.DS3231().set_alarm( t );
   			Loom.Relay().set(false);
   		}
   		break;
@@ -93,11 +87,14 @@ void loop()
   		}
   	case sleep:
   	default:
-  		//FIXME: set the alarm for sleep time
+  		//set the alarm for sleep time
+      t = t + TimeSpan(2);
+  		Loom.DS3231().set_alarm( t );
   		measuring_state = wake;
   		LPrintln("Powering Down");
   		digitalWrite(5, HIGH); digitalWrite(6, LOW); // Disable 5V and 3.3V rails
-  		attachInterrupt(6);
-  		//FIXME: Sleep until interrupt
+  		attachInterrupt(6, wakeISR, FALLING);
+  		//Sleep until interrupt
+      Loom.SleepManager().sleep();
   }
 }
