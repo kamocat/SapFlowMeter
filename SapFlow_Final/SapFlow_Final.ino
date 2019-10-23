@@ -5,6 +5,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+#define ALARM_PIN 12
+
 #include <Loom.h>
 
 // Include configuration
@@ -31,74 +33,71 @@ LoomFactory<
 
 LoomManager Loom{ &ModuleFactory };
 
-DateTime t;
-
 // Detach interrupt on wake
-void wakeISR() { 
-  detachInterrupt(6); 
-  LPrintln("Alarm went off");
+volatile bool alarmFlag = false;
+void alarmISR() { 
+  detachInterrupt(digitalPinToInterrupt(ALARM_PIN)); 
+  Loom.InterruptManager().get_RTC_module()->clear_alarms();
+  Loom.InterruptManager().reconnect_interrupt(ALARM_PIN); 
+
+  alarmFlag = true;
 }
 
 void setup() 
 {
 
   pinMode(5, OUTPUT); pinMode(6, OUTPUT);
-  pinMode(12, INPUT_PULLUP);
+  pinMode(ALARM_PIN, INPUT_PULLUP);
 
   digitalWrite(5, LOW); digitalWrite(6, HIGH);
   
 	Loom.begin_serial(true);
 	Loom.parse_config(json_config);
 	//Loom.print_config();
+  measuring_state = wake;
+
+  Loom.InterruptManager().register_ISR(ALARM_PIN, alarmISR, LOW, ISR_Type::IMMEDIATE);
+  Loom.InterruptManager().RTC_alarm_duration(TimeSpan(10));
 
 	LPrintln("\n ** Setup Complete ** ");
 
- measuring_state = wake;
 }
 
 void loop() 
 {
  	Loom.measure();
 	Loom.package();
-  delay(1); // Slow down the loop a little bit
-//	Loom.display_data();
+  delay(50); // Slow down the loop a little bit
+	Loom.display_data();
 	// Log using default filename as provided in configuration
 	// in this case, 'datafile.csv'
 	Loom.SDCARD().log();
-  switch(measuring_state){
-  	case wake:
-  		digitalWrite(5, LOW); digitalWrite(6, HIGH); // Enable 5V and 3.3V rails
-  		measuring_state = heating;
-  		Loom.Relay().set(true);
-      LPrintln("Heater On");
-  		//Set the alarm for heating time
-      t = Loom.DS3231().now() + TimeSpan(5);
-  		Loom.DS3231().set_alarm( t );
-  		break;
-  	case heating:
-  		if( !digitalRead(12) ){ // alarm went off
+  if (alarmFlag) {
+    alarmFlag = false;
+    switch(measuring_state){
+    	case wake:
+    		digitalWrite(5, LOW); digitalWrite(6, HIGH); // Enable 5V and 3.3V rails
+    		measuring_state = heating;
+    		Loom.Relay().set(true);
+        LPrintln("Heater On");
+    		//Set the alarm for heating time
+        Loom.InterruptManager().RTC_alarm_duration(TimeSpan(2)); 
+    		break;
+    	case heating:
   			measuring_state = cooling;
   			//set the alarm for cooling time
-        t = t + TimeSpan(10);
-  		  Loom.DS3231().set_alarm( t );
+        Loom.InterruptManager().RTC_alarm_duration(TimeSpan(5)); 
   			Loom.Relay().set(false);
         LPrintln("Heater Off");
-  		}
-  		break;
-  	case cooling:
-  		if( !digitalRead(12) ){ // alarm went off
-  			measuring_state = sleep;
-  		}
-  	case sleep:
-  	default:
-  		//set the alarm for sleep time
-      t = t + TimeSpan(2);
-  		Loom.DS3231().set_alarm( t );
-  		measuring_state = wake;
-  		LPrintln("Powering Down");
-  		//digitalWrite(5, HIGH); digitalWrite(6, LOW); // Disable 5V and 3.3V rails
-  		//attachInterrupt(6, wakeISR, FALLING);
-  		//Sleep until interrupt
-      //Loom.SleepManager().sleep();
+    		break;
+    	default:
+    		//set the alarm for sleep time
+        Loom.InterruptManager().RTC_alarm_duration(TimeSpan(5)); 
+    		measuring_state = wake;
+    		LPrintln("Powering Down");
+    		digitalWrite(5, HIGH); digitalWrite(6, LOW); // Disable 5V and 3.3V rails
+    		//Sleep until interrupt
+        //Loom.SleepManager().sleep();
+    }
   }
 }
