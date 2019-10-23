@@ -32,9 +32,9 @@
 | 6  | 5v_En | Power out (Pull high to enable)|
 | 9  |
 | 10 | RTC_CS|Real-time clock|
-| 11 |
+| 11 | Heat | Relay |
 | 12 | RTC_interrupt |Real-time clock (used for alarms)|
-| 13 | Relay enable  | Relay |
+| 13 | Status | LED |
 | 5V | USB    | Power in |
 | En | Enable | Voltage Regulator |
 | Bat| 3.7V   | Battery |

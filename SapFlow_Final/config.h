@@ -12,7 +12,7 @@
 		},\
     {\
       'name':'Relay',\
-      'params':[13]\
+      'params':[11]\
     },\
 		{\
 			'name':'SD',\
