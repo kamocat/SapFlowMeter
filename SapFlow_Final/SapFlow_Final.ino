@@ -9,6 +9,7 @@
 #define HEATER 11
 
 #include <OPEnS_RTC.h>
+#include <LowPower.h>
 
 enum state{
 	wake,
@@ -23,7 +24,7 @@ RTC_DS3231 rtc_ds;
 
 volatile bool alarmFlag = false;
 void alarmISR() {
-	// Do I need to detach the interrupt every time, or can I just clear the alarm in the RTC?
+	// Reset the alarm.
   rtc_ds.armAlarm(1, false);
 	rtc_ds.clearAlarm(1);
 	alarmFlag = true;
@@ -51,6 +52,21 @@ void setTimer( int seconds ){
 	rtc_ds.setAlarm(ALM1_MATCH_HOURS, t.second(), t.minute(), t.hour(), 0);
   Serial.print("Alarm set to ");
   printTime(t);
+}
+
+void feather_sleep( void ){
+  // Prep for sleep
+  Serial.end();
+  USBDevice.detach();
+  digitalWrite(LED_BUILTIN, LOW);
+
+  // Sleep
+  LowPower.standby();
+
+  // Prep to resume
+  USBDevice.attach();
+  Serial.begin(115200);
+  digitalWrite(LED_BUILTIN, HIGH);
 }
 
 void setup() 
@@ -83,11 +99,7 @@ void setup()
 
 void loop() 
 {
-	delay(500);	// Slow down the loop a little
-  Serial.print("State: ");
-  Serial.print(measuring_state); // To show what state we're in.
-  Serial.print("Time: ");
-  printTime(rtc_ds.now());
+	//delay(500);	// Slow down the loop a little
 	if (alarmFlag) {
 		alarmFlag = false;
     Serial.println("Alarm went off!");
@@ -105,7 +117,7 @@ void loop()
 				digitalWrite(HEATER, LOW);
 				Serial.println("Heater Off");
 				//set the alarm for cooling time
-				setTimer(2);
+				setTimer(5);
 				break;
 			default:
 				// Disable 5V and 3.3V rails
@@ -113,8 +125,9 @@ void loop()
 				Serial.println("Powering Down");
 				measuring_state = wake;
 				//set the alarm for sleep time
-				setTimer(2);
-				//FIXME: Sleep until interrupt
+				setTimer(5);
+				//Sleep until interrupt
+        feather_sleep();
 		}
 	}
 }
