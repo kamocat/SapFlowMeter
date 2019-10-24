@@ -2,29 +2,16 @@
 	'general':\
 	{\
 		'name':'Device',\
-		'instance':1,\
-		'interval':5\
+		'instance':1\
 	},\
 	'components':[\
 		{\
-			'name':'Analog',\
+			'name':'Interrupt_Manager',\
 			'params':'default'\
 		},\
-    {\
-      'name':'Relay',\
-      'params':[11]\
-    },\
 		{\
-			'name':'SD',\
-			'params':[true,1000,10,'datafile.csv']\
-		},\
-		{\
-			'name':'DS3231',\
-			'params':'default'\
-		},\
-   {\
-   'name':'Loom_Sleep_Manager',\
-    'params':[true,false,1]\
-    }\
+			'name':'Relay',\
+			'params':[11]\
+		}\
 	]\
 }"

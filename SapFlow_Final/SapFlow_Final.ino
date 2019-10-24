@@ -25,8 +25,8 @@ enum state{
 // Set enabled modules
 LoomFactory<
 	Enable::Internet::Disabled,
-	Enable::Sensors::Enabled,
-	Enable::Radios::Enabled,
+	Enable::Sensors::Disabled,
+	Enable::Radios::Disabled,
 	Enable::Actuators::Enabled,
 	Enable::Max::Disabled
 > ModuleFactory{};
@@ -62,12 +62,6 @@ void setup()
 
 void loop() 
 {
- 	Loom.measure();
-	Loom.package();
-	Loom.display_data();
-	// Log using default filename as provided in configuration
-	// in this case, 'datafile.csv'
-	Loom.SDCARD().log();
   Loom.pause(100);  // Slow down the loop a little
   if (alarmFlag) {
     alarmFlag = false;
@@ -84,17 +78,17 @@ void loop()
   			measuring_state = cooling;
         Loom.Relay().set(false);
   			//set the alarm for cooling time
-        Loom.InterruptManager().RTC_alarm_duration(TimeSpan(5)); 
+        Loom.InterruptManager().RTC_alarm_duration(TimeSpan(2)); 
         LPrintln("Heater Off");
     		break;
     	default:
         digitalWrite(5, HIGH); digitalWrite(6, LOW); // Disable 5V and 3.3V rails
         measuring_state = wake;
     		//set the alarm for sleep time
-        Loom.InterruptManager().RTC_alarm_duration(TimeSpan(5)); 
+        Loom.InterruptManager().RTC_alarm_duration(TimeSpan(2)); 
     		LPrintln("Powering Down");
     		//Sleep until interrupt
-        Loom.SleepManager().sleep();
+        //Loom.SleepManager().sleep();
     }
   }
 }
