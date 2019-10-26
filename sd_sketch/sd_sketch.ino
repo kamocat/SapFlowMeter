@@ -60,11 +60,14 @@ class datastream{
     data.clear();
     return k;
   }
-  size_t dump( ofstream &f ){
+  size_t dump( char * fname ){
+    // Append data to existing file.
+    ofstream sdout( fname, ios::out | ios::app );
     for( auto i = data.begin(); i != data.end(); ++i ){
-      i->print(f, t0);
+      i->print(sdout, t0);
     }
-    f<<flush;
+    sdout<<flush;
+    sdout.close();
     size_t k = data.size();
     data.clear();
     return k;
@@ -116,7 +119,8 @@ void setup(void) {
     sd.initErrorHalt();
   }
 
-
+}
+void loop(void) {
   delay(2000);
   for( int i = 0; i < 10; ++i ){
     d.append(datapoint(i*1, i*2));
@@ -125,11 +129,6 @@ void setup(void) {
   
   // Sava data
   Serial.print("Saving data... ");
-  ofstream sdout( filename );
-  d.dump( sdout );
-  sdout.close();
+  d.dump( filename );
   Serial.print("done.\n");
-}
-void loop(void) {
-  
 }
