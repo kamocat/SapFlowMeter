@@ -61,6 +61,12 @@ class datapoint{
     ArduinoOutStream s(Serial);
     print( s, 0 );
   }
+  // Print the header for a csv
+  void header( ofstream &stream ){
+    stream << setw(10) << "millis" << ',';
+    stream << setw(6) << "A0" << ',';
+    stream << setw(6) << "A1" << '\n';
+  }
   uint32_t time( void ){
     return t;
   }
@@ -69,10 +75,14 @@ class datapoint{
 class datastream{
   private:
   uint32_t t0;  // milliseconds
-  //DateTime date;
+  DateTime date;
   std::vector <datapoint> data;
+  RTC_DS3231 * clock;
 
   public:
+  datastream( RTC_DS3231 &rtc_ds ){
+    clock = &rtc_ds;
+  }
   size_t dump( ArduinoOutStream &cout ){
     for( auto i = data.begin(); i != data.end(); ++i ){
       i->print(cout, t0);
@@ -84,6 +94,12 @@ class datastream{
   size_t dump( char * fname ){
     // Append data to existing file.
     ofstream sdout( fname, ios::out | ios::app );
+    // Print the timestamp for the start of the samples
+    sdout<<(int)date.month()<<'/'<<(int)date.day()<<' '<<date.year()<<' ';
+    sdout<<(int)date.hour()<<':'<<(int)date.minute()<<':'<<(int)date.second()<<endl;
+    // Print the header
+    data.begin()->header(sdout);
+    // Print all the data
     for( auto i = data.begin(); i != data.end(); ++i ){
       i->print(sdout, t0);
     }
@@ -99,6 +115,7 @@ class datastream{
   }
   void append( datapoint p ){
     if( data.empty() ){
+      date = clock->now();
       t0 = p.time();
     }
     data.push_back(p);
@@ -106,10 +123,11 @@ class datastream{
 };
 
 //------------------------------------------------------------------------------
-
+// Instance of our RTC
+RTC_DS3231 rtc_ds;
 
 // Data storage object
-datastream d;
+datastream d(rtc_ds);
 
 enum state{
 	wake,
@@ -117,10 +135,6 @@ enum state{
 	cooling,
 	sleep
 } measuring_state;
-
-
-// Instance of our RTC
-RTC_DS3231 rtc_ds;
 
 volatile bool alarmFlag = false;
 void alarmISR() {
