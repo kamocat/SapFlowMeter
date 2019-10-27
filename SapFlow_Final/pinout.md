@@ -31,7 +31,7 @@
 | 5  | 3.3_En| Power out (Pull low to enable)|
 | 6  | 5v_En | Power out (Pull high to enable)|
 | 9  |
-| 10 | RTC_CS|Real-time clock|
+| 10 | CS| SD Card on Hypno|
 | 11 | Heat | Relay |
 | 12 | RTC_interrupt |Real-time clock (used for alarms)|
 | 13 | Status | LED |
