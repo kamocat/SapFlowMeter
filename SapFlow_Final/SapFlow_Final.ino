@@ -28,7 +28,7 @@ const uint32_t SAMPLE_INTERVAL_MS = 1000;
 
 SdFat sd; // File system object.
 
-char * filename = "test3.csv";
+char * filename = "test4.csv";
 
 // Stores samples and relative time.
 // Adapt this datatype to your measurement needs.
@@ -75,8 +75,10 @@ class datastream{
   private:
   uint32_t t0;  // milliseconds
   DateTime date;
-  std::vector <sample> data;
   RTC_DS3231 * clock;
+  char * fname;
+  ofstream sdout;
+  bool file_open;
   void timestamp( ofstream &cout, uint32_t sample_time ){
     // Calculate milliseconds from start of dataset
     uint32_t t = sample_time - t0;
@@ -93,41 +95,24 @@ class datastream{
   }
 
   public:
-  datastream( RTC_DS3231 &rtc_ds ){
+  datastream( RTC_DS3231 &rtc_ds, char * filename ){
     clock = &rtc_ds;
+    fname = filename;
   }
-  size_t dump( ArduinoOutStream &cout ){
-    for( auto i = data.begin(); i != data.end(); ++i ){
-      i->print(cout);
-    }
-    size_t k = data.size();
-    data.clear();
-    return k;
-  }
-  size_t dump( char * fname ){
-    // Append data to existing file.
-    ofstream sdout( fname, ios::out | ios::app );
-    // Print all the data
-    for( auto i = data.begin(); i != data.end(); ++i ){
-      timestamp(sdout, i->time());
-      i->print(sdout);
-    }
-    sdout<<flush;
+  void flush( void ){
+    sdout.flush();
     sdout.close();
-    size_t k = data.size();
-    data.clear();
-    return k;
-  }
-  size_t dump( void ){
-    ArduinoOutStream cout(Serial);
-    dump( cout );
+    file_open = false;
   }
   void append( sample p ){
-    if( data.empty() ){
+    if( !file_open ){
       date = clock->now();
       t0 = p.time();
+      sdout = ofstream( fname, ios::out | ios::app );
+      file_open = true;
     }
-    data.push_back(p);
+    timestamp(sdout, p.time());
+    p.print(sdout);
   }
 };
 
@@ -139,7 +124,7 @@ RTC_DS3231 rtc_ds;
 volatile uint32_t event_time;
 
 // Data storage object
-datastream d(rtc_ds);
+datastream d(rtc_ds, filename);
 
 enum state{
 	wake,
@@ -255,18 +240,18 @@ void loop()
 				Serial.print("Heater Off at ");
 				printTime(rtc_ds.now());
 				//set the alarm for cooling time
-				event_time += 1000;
+				event_time += 114000;
 				measuring_state = sleep;
 				break;
 			default:
-        // Log the samples to a csv file
-        d.dump(filename);
+        // Make sure we're done logging
+        d.flush();
 				// Disable 5V and 3.3V rails
 				digitalWrite(5, HIGH); digitalWrite(6, LOW); 
 				digitalWrite(chipSelect, LOW);  // Don't feed power via SD card
 				Serial.println("Powering Down");
 				//set the alarm for sleep time
-				setTimer(5);
+				setTimer(177);
 				//Sleep until interrupt (It works, but it's annoying for general testing)
         feather_sleep();
 				measuring_state = wake;
