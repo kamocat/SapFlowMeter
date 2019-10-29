@@ -6,7 +6,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #define ALARM_PIN 12
-#define HEATER 11
+#define HEATER 13
 
 #include <OPEnS_RTC.h>
 #include <LowPower.h>
@@ -28,7 +28,7 @@ const uint32_t SAMPLE_INTERVAL_MS = 1000;
 
 SdFat sd; // File system object.
 
-char * filename = "test.csv";
+char * filename = "test3.csv";
 
 // Stores samples and relative time.
 // Adapt this datatype to your measurement needs.
@@ -52,21 +52,14 @@ class sample{
     sample( 1 );
   }
   // One version for printing to serial
-  void print( ArduinoOutStream &stream, uint32_t offset){
-    stream << setw(10) << (t - offset) << ',';
+  void print( ArduinoOutStream &stream){
     stream << setw(6) << channel1 << ',';
     stream << setw(6) << channel2 << '\n';
   }
   // Another version for printing to a file
-  void print( ofstream &stream, uint32_t offset){
-    stream << setw(10) << (t - offset) << ',';
+  void print( ofstream &stream){
     stream << setw(6) << channel1 << ',';
     stream << setw(6) << channel2 << '\n';
-  }
-  // A third version for printing to serial, just in case
-  void print( void ){
-    ArduinoOutStream s(Serial);
-    print( s, 0 );
   }
   // Print the header for a csv
   void header( ofstream &stream ){
@@ -89,11 +82,13 @@ class datastream{
     uint32_t t = sample_time - t0;
     // Offset date according to seconds elapsed
     DateTime d = date + TimeSpan(t/1000);
-    // Print standard date and time, and milliseconds
-    cout<<(int)d.month()<<'/'<<(int)d.day()<<' '<<d.year()<<' ';
-    cout<<(int)d.hour()<<':'<<setw(2)<<(int)d.minute()<<':'<<(int)d.second();
+    t = t % 1000; // Calculate remainder milliseconds
+    // Print date and time with milliseconds
     char old = cout.fill('0');
-    cout<<'.'<<setw(3)<<(t%1000)<<" ,";
+    cout<<setw(4)<<d.year()<<'-';
+    cout<<setw(2)<<(int)d.month()<<'-'<<setw(2)<<(int)d.day()<<' ';
+    cout<<setw(2)<<(int)d.hour()<<':'<<setw(2)<<(int)d.minute()<<':';
+    cout<<setw(2)<<(int)d.second()<<'.'<<setw(3)<< t <<"  ,";
     cout.fill(old);
   }
 
@@ -103,7 +98,7 @@ class datastream{
   }
   size_t dump( ArduinoOutStream &cout ){
     for( auto i = data.begin(); i != data.end(); ++i ){
-      i->print(cout, t0);
+      i->print(cout);
     }
     size_t k = data.size();
     data.clear();
@@ -112,13 +107,10 @@ class datastream{
   size_t dump( char * fname ){
     // Append data to existing file.
     ofstream sdout( fname, ios::out | ios::app );
-
-    // Print the header
-    data.begin()->header(sdout);
     // Print all the data
     for( auto i = data.begin(); i != data.end(); ++i ){
       timestamp(sdout, i->time());
-      i->print(sdout, t0);
+      i->print(sdout);
     }
     sdout<<flush;
     sdout.close();
@@ -191,7 +183,7 @@ void feather_sleep( void ){
   // Prep for sleep
   Serial.end();
   USBDevice.detach();
-  digitalWrite(LED_BUILTIN, LOW);
+//  digitalWrite(LED_BUILTIN, LOW);
 
   // Sleep
   LowPower.standby();
@@ -199,7 +191,7 @@ void feather_sleep( void ){
   // Prep to resume
   USBDevice.attach();
   Serial.begin(115200);
-  digitalWrite(LED_BUILTIN, HIGH);
+//  digitalWrite(LED_BUILTIN, HIGH);
 }
 
 void setup() 
@@ -208,6 +200,7 @@ void setup()
 	pinMode(5, OUTPUT); pinMode(6, OUTPUT);
 	pinMode(HEATER, OUTPUT);
 	pinMode(ALARM_PIN, INPUT_PULLUP);
+	digitalWrite(HEATER, LOW);
 	measuring_state = wake;
 	event_time = millis();
 	
@@ -222,15 +215,15 @@ void setup()
   if (! rtc_ds.begin()) {
     Serial.println("Couldn't find RTC");
   }
-  // This may end up causing a problem in practice - what if RTC looses power in field? Shouldn't happen with coin cell batt backup
+  // This may end up causing a problem in practice - what if RTC loses power in field? Shouldn't happen with coin cell batt backup
   if (rtc_ds.lostPower()) {
     Serial.println("RTC lost power, lets set the time!");
     // Set the RTC to the date & time this sketch was compiled
     rtc_ds.adjust(DateTime(F(__DATE__), F(__TIME__)));
   }
   if (!sd.begin(chipSelect, SD_SCK_MHZ(50))) {
-      sd.initErrorHalt();
-    }
+    sd.initErrorHalt();
+  }
 	Serial.println("\n ** Setup Complete ** ");
 }
 
@@ -241,7 +234,8 @@ void loop()
 	if ((millis()-event_time) < 60000) {
 		switch(measuring_state){
 			case wake:
-				digitalWrite(5, LOW); digitalWrite(6, HIGH); // Enable 5V and 3.3V rails
+				digitalWrite(5, LOW); digitalWrite(6, HIGH); // Enable 5V and 3.3V
+				digitalWrite(chipSelect, HIGH);  // Disable SD card for now.
 				Serial.print("Awoke at ");
 				printTime(rtc_ds.now());
 				// Sample for 3 seconds before heating
@@ -261,7 +255,7 @@ void loop()
 				Serial.print("Heater Off at ");
 				printTime(rtc_ds.now());
 				//set the alarm for cooling time
-				event_time += 114*1000;
+				event_time += 1000;
 				measuring_state = sleep;
 				break;
 			default:
@@ -269,9 +263,10 @@ void loop()
         d.dump(filename);
 				// Disable 5V and 3.3V rails
 				digitalWrite(5, HIGH); digitalWrite(6, LOW); 
+				digitalWrite(chipSelect, LOW);  // Don't feed power via SD card
 				Serial.println("Powering Down");
 				//set the alarm for sleep time
-				setTimer(180);
+				setTimer(5);
 				//Sleep until interrupt (It works, but it's annoying for general testing)
         feather_sleep();
 				measuring_state = wake;
