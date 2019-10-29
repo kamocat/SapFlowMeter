@@ -18,7 +18,7 @@
 #include <vector>
 
 // SD chip select pin.  Be sure to disable any other SPI devices such as Enet.
-const uint8_t chipSelect = 4;
+const uint8_t chipSelect = 10;
 
 // Interval between data records in milliseconds.
 // The interval must be greater than the maximum SD write latency plus the
@@ -212,7 +212,8 @@ void setup()
 	event_time = millis();
 	
 	Serial.begin(115200);
-  while(!Serial); // Wait until serial starts.
+//  while(!Serial); // Wait until serial starts.
+	delay(2000);
   Serial.println("Starting setup");
 
 	// Falling-edge might not wake from sleep. Need more testing.
@@ -238,24 +239,27 @@ void loop()
 	delay(100);	// Slow down the loop a little
   d.append(sample(16)); // Oversample 16x
 	if ((millis()-event_time) < 60000) {
-    Serial.println("Alarm went off!");
 		switch(measuring_state){
 			case wake:
 				digitalWrite(5, LOW); digitalWrite(6, HIGH); // Enable 5V and 3.3V rails
+				Serial.print("Awoke at ");
+				printTime(rtc_ds.now());
 				// Sample for 3 seconds before heating
 				event_time += 3000;
 				measuring_state = heating;
 				break;
 			case heating:
 				digitalWrite(HEATER, HIGH);
-				Serial.println("Heater On");
+				Serial.print("Heater On at ");
+				printTime(rtc_ds.now());
 				//Set the alarm for heating time
 				event_time += 6000;
 				measuring_state = cooling;
 				break;
 			case cooling:
 				digitalWrite(HEATER, LOW);
-				Serial.println("Heater Off");
+				Serial.print("Heater Off at ");
+				printTime(rtc_ds.now());
 				//set the alarm for cooling time
 				event_time += 114*1000;
 				measuring_state = sleep;
