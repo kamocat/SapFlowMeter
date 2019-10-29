@@ -143,6 +143,9 @@ class datastream{
 // Instance of our RTC
 RTC_DS3231 rtc_ds;
 
+// Time used for state transitions
+volatile uint32_t event_time;
+
 // Data storage object
 datastream d(rtc_ds);
 
@@ -153,12 +156,11 @@ enum state{
 	sleep
 } measuring_state;
 
-volatile bool alarmFlag = false;
 void alarmISR() {
 	// Reset the alarm.
   rtc_ds.armAlarm(1, false);
 	rtc_ds.clearAlarm(1);
-	alarmFlag = true;
+	event_time = millis();
 }
 
 void printTime( DateTime t ){
@@ -207,7 +209,7 @@ void setup()
 	pinMode(HEATER, OUTPUT);
 	pinMode(ALARM_PIN, INPUT_PULLUP);
 	measuring_state = wake;
-  alarmFlag = true;
+	event_time = millis();
 	
 	Serial.begin(115200);
   while(!Serial); // Wait until serial starts.
@@ -235,24 +237,28 @@ void loop()
 {
 	delay(100);	// Slow down the loop a little
   d.append(sample(16)); // Oversample 16x
-	if (alarmFlag) {
-		alarmFlag = false;
+	if ((millis()-event_time) < 60000) {
     Serial.println("Alarm went off!");
 		switch(measuring_state){
 			case wake:
 				digitalWrite(5, LOW); digitalWrite(6, HIGH); // Enable 5V and 3.3V rails
+				// Sample for 3 seconds before heating
+				event_time += 3000;
 				measuring_state = heating;
+				break;
+			case heating:
 				digitalWrite(HEATER, HIGH);
 				Serial.println("Heater On");
 				//Set the alarm for heating time
-				setTimer(2);
-				break;
-			case heating:
+				event_time += 6000;
 				measuring_state = cooling;
+				break;
+			case cooling:
 				digitalWrite(HEATER, LOW);
 				Serial.println("Heater Off");
 				//set the alarm for cooling time
-				setTimer(5);
+				event_time += 114*1000;
+				measuring_state = sleep;
 				break;
 			default:
         // Log the samples to a csv file
@@ -260,11 +266,11 @@ void loop()
 				// Disable 5V and 3.3V rails
 				digitalWrite(5, HIGH); digitalWrite(6, LOW); 
 				Serial.println("Powering Down");
-				measuring_state = wake;
 				//set the alarm for sleep time
-				setTimer(5);
+				setTimer(180);
 				//Sleep until interrupt (It works, but it's annoying for general testing)
         feather_sleep();
+				measuring_state = wake;
 		}
 	}
 }
