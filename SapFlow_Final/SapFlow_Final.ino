@@ -32,29 +32,36 @@ char * filename = "test.csv";
 
 // Stores samples and relative time.
 // Adapt this datatype to your measurement needs.
-class datapoint{
+class sample{
   private:
   uint32_t t;  // milliseconds
-  int16_t sample1;
-  int16_t sample2;
+  uint32_t channel1;
+  uint32_t channel2;
 
   public:
-  datapoint( int16_t s1, int16_t s2 ){
+  sample( size_t oversample ){
     t = millis();
-    sample1 = s1;
-    sample2 = s2;
+    channel1 = 0;
+    channel2 = 0;
+    for( auto i = 0; i < oversample; ++i ){
+      channel1 += analogRead(A0);
+      channel2 += analogRead(A1);
+    }
+  }
+  sample( void ){
+    sample( 1 );
   }
   // One version for printing to serial
   void print( ArduinoOutStream &stream, uint32_t offset){
     stream << setw(10) << (t - offset) << ',';
-    stream << setw(6) << sample1 << ',';
-    stream << setw(6) << sample2 << '\n';
+    stream << setw(6) << channel1 << ',';
+    stream << setw(6) << channel2 << '\n';
   }
   // Another version for printing to a file
   void print( ofstream &stream, uint32_t offset){
     stream << setw(10) << (t - offset) << ',';
-    stream << setw(6) << sample1 << ',';
-    stream << setw(6) << sample2 << '\n';
+    stream << setw(6) << channel1 << ',';
+    stream << setw(6) << channel2 << '\n';
   }
   // A third version for printing to serial, just in case
   void print( void ){
@@ -63,7 +70,6 @@ class datapoint{
   }
   // Print the header for a csv
   void header( ofstream &stream ){
-    stream << setw(10) << "millis" << ',';
     stream << setw(6) << "A0" << ',';
     stream << setw(6) << "A1" << '\n';
   }
@@ -76,8 +82,20 @@ class datastream{
   private:
   uint32_t t0;  // milliseconds
   DateTime date;
-  std::vector <datapoint> data;
+  std::vector <sample> data;
   RTC_DS3231 * clock;
+  void timestamp( ofstream &cout, uint32_t sample_time ){
+    // Calculate milliseconds from start of dataset
+    uint32_t t = sample_time - t0;
+    // Offset date according to seconds elapsed
+    DateTime d = date + TimeSpan(t/1000);
+    // Print standard date and time, and milliseconds
+    cout<<(int)d.month()<<'/'<<(int)d.day()<<' '<<d.year()<<' ';
+    cout<<(int)d.hour()<<':'<<setw(2)<<(int)d.minute()<<':'<<(int)d.second();
+    char old = cout.fill('0');
+    cout<<'.'<<setw(3)<<(t%1000)<<" ,";
+    cout.fill(old);
+  }
 
   public:
   datastream( RTC_DS3231 &rtc_ds ){
@@ -94,13 +112,12 @@ class datastream{
   size_t dump( char * fname ){
     // Append data to existing file.
     ofstream sdout( fname, ios::out | ios::app );
-    // Print the timestamp for the start of the samples
-    sdout<<(int)date.month()<<'/'<<(int)date.day()<<' '<<date.year()<<' ';
-    sdout<<(int)date.hour()<<':'<<(int)date.minute()<<':'<<(int)date.second()<<endl;
+
     // Print the header
     data.begin()->header(sdout);
     // Print all the data
     for( auto i = data.begin(); i != data.end(); ++i ){
+      timestamp(sdout, i->time());
       i->print(sdout, t0);
     }
     sdout<<flush;
@@ -113,7 +130,7 @@ class datastream{
     ArduinoOutStream cout(Serial);
     dump( cout );
   }
-  void append( datapoint p ){
+  void append( sample p ){
     if( data.empty() ){
       date = clock->now();
       t0 = p.time();
@@ -217,7 +234,7 @@ void setup()
 void loop() 
 {
 	delay(100);	// Slow down the loop a little
-  d.append(datapoint(analogRead(A0), analogRead(A1)));
+  d.append(sample(16)); // Oversample 16x
 	if (alarmFlag) {
 		alarmFlag = false;
     Serial.println("Alarm went off!");
