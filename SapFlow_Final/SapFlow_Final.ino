@@ -6,16 +6,20 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #define ALARM_PIN 12
-#define HEATER 13
+#define HEATER 11
 
 #include <OPEnS_RTC.h>
 #include <LowPower.h>
- #undef min
- #undef max
 #include <SPI.h>
 #include "SdFat.h"
 #include "sdios.h"
-#include <vector>
+#include <Adafruit_MAX31865.h>
+
+Adafruit_MAX31865 rtd1 = Adafruit_MAX31865(A4);
+Adafruit_MAX31865 rtd2 = Adafruit_MAX31865(A5);
+
+#define RREF 430.0
+#define RNOMINAL 100.0
 
 // SD chip select pin.  Be sure to disable any other SPI devices such as Enet.
 const uint8_t chipSelect = 10;
@@ -29,16 +33,24 @@ const uint32_t SAMPLE_INTERVAL_MS = 1000;
 SdFat sd; // File system object.
 
 char * filename = "test4.csv";
+ArduinoOutStream cout(Serial);
 
 // Stores samples and relative time.
 // Adapt this datatype to your measurement needs.
 class sample{
   private:
   uint32_t t;  // milliseconds
-  uint32_t channel1;
-  uint32_t channel2;
+  float channel1;
+  float channel2;
 
   public:
+  sample( Adafruit_MAX31865 r1, Adafruit_MAX31865 r2 ){
+    t = millis();
+    r1.readRTD();
+    r2.readRTD();
+    channel1 = r1.temperature(RNOMINAL, RREF);
+    channel2 = r2.temperature(RNOMINAL, RREF);
+  }
   sample( size_t oversample ){
     t = millis();
     channel1 = 0;
@@ -190,8 +202,6 @@ void setup()
 	event_time = millis();
 	
 	Serial.begin(115200);
-//  while(!Serial); // Wait until serial starts.
-	delay(2000);
   Serial.println("Starting setup");
 
 	// Falling-edge might not wake from sleep. Need more testing.
@@ -209,13 +219,18 @@ void setup()
   if (!sd.begin(chipSelect, SD_SCK_MHZ(50))) {
     sd.initErrorHalt();
   }
+
+  rtd1.begin(MAX31865_2WIRE);  // set to 2WIRE or 4WIRE as necessary
+  rtd2.begin(MAX31865_2WIRE);  // set to 2WIRE or 4WIRE as necessary
 	Serial.println("\n ** Setup Complete ** ");
 }
 
 void loop() 
 {
-	delay(100);	// Slow down the loop a little
-  d.append(sample(16)); // Oversample 16x
+	//delay(100);	// Slow down the loop a little
+  sample s = sample(rtd1, rtd2); // Sample RTDs
+  s.print(cout);
+  d.append(s);  // Log to SD card
 	if ((millis()-event_time) < 60000) {
 		switch(measuring_state){
 			case wake:
@@ -247,8 +262,7 @@ void loop()
         // Make sure we're done logging
         d.flush();
 				// Disable 5V and 3.3V rails
-				digitalWrite(5, HIGH); digitalWrite(6, LOW); 
-				digitalWrite(chipSelect, LOW);  // Don't feed power via SD card
+				digitalWrite(5, HIGH); digitalWrite(6, LOW);
 				Serial.println("Powering Down");
 				//set the alarm for sleep time
 				setTimer(177);
