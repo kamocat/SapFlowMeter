@@ -22,7 +22,7 @@ Adafruit_MAX31865 rtd2 = Adafruit_MAX31865(A5);
 #define RNOMINAL 100.0
 // Adapt this datatype to your measurement needs.
 // SD chip select pin.  Be sure to disable any other SPI devices such as Enet.
-const uint8_t chipSelect = 4;
+const uint8_t chipSelect = 10;
 
 // Interval between data records in milliseconds.
 // The interval must be greater than the maximum SD write latency plus the
@@ -32,7 +32,7 @@ const uint32_t SAMPLE_INTERVAL_MS = 1000;
 
 SdFat sd; // File system object.
 
-char * filename = "test4.csv";
+char * filename = "test5.txt";
 ArduinoOutStream cout(Serial);
 
 // Stores samples and relative time.
@@ -190,6 +190,8 @@ void setup()
 	pinMode(5, OUTPUT); pinMode(6, OUTPUT);
 	digitalWrite(5, LOW); digitalWrite(6, HIGH);
 	pinMode(ALARM_PIN, INPUT_PULLUP);
+	pinMode(8, OUTPUT);
+	digitalWrite(8, HIGH);
 	
 	Serial.begin(115200);
   while(!Serial);
@@ -209,8 +211,10 @@ void setup()
     rtc_ds.adjust(DateTime(F(__DATE__), F(__TIME__)));
   }
   if (!sd.begin(chipSelect, SD_SCK_MHZ(50))) {
+    Serial.println("SD card error");
     sd.initErrorHalt();
   }
+  Serial.println("Setup complete");
 
 }
 void loop(void) {
@@ -218,7 +222,7 @@ void loop(void) {
   Serial.println("Welcome!");
   d.append(sample(1));
   d.flush();
-  setTimer(2);
+  setTimer(60);
   delay(1000);
   feather_sleep();
 }
