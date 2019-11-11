@@ -11,7 +11,6 @@
 #include <LowPower.h>
 #include <sdios.h> //for ArduinoOutStream
 
-
 ArduinoOutStream cout(Serial);
 
 
@@ -44,6 +43,7 @@ void setTimer( int seconds ){
   Serial.print("The time is ");
   printTime(t);
   t = t + TimeSpan(seconds);
+  Serial.print("Setting alarm...");
 	rtc_ds.setAlarm(ALM1_MATCH_HOURS, t.second(), t.minute(), t.hour(), 0);
   Serial.print("Alarm set to ");
   printTime(t);
