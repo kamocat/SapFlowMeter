@@ -11,8 +11,24 @@
 #include <LowPower.h>
 #include <sdios.h> //for ArduinoOutStream
 
+#include <SPI.h>
+#include "SdFat.h"
+#include "sdios.h"
+
 ArduinoOutStream cout(Serial);
 
+// SD chip select pin.  Be sure to disable any other SPI devices such as Enet.
+const uint8_t chipSelect = 10;
+
+// Interval between data records in milliseconds.
+// The interval must be greater than the maximum SD write latency plus the
+// time to acquire and write data to the SD to avoid overrun errors.
+// Run the bench example to check the quality of your SD card.
+const uint32_t SAMPLE_INTERVAL_MS = 1000;
+
+SdFat sd; // File system object.
+
+ofstream sdout;
 
 // Instance of our RTC
 RTC_DS3231 rtc_ds;
@@ -86,12 +102,16 @@ void setup()
     // Set the RTC to the date & time this sketch was compiled
     rtc_ds.adjust(DateTime(F(__DATE__), F(__TIME__)));
   }
+  Serial.println("Initializing SD Card");
+  if (!sd.begin(chipSelect, SD_SCK_MHZ(50))) {
+    sd.initErrorHalt();
+  }
+  sdout = ofstream( "test", ios::out | ios::app );
   Serial.println("Setup complete");
-
 }
 void loop(void) {
-  while(!Serial);
   Serial.println("Welcome!");
+  sdout<<rtc_ds.now().text();
   setTimer(60);
   delay(1000);
   feather_sleep();
