@@ -13,7 +13,6 @@
 
 #include <SPI.h>
 #include "SdFat.h"
-#include "sdios.h"
 
 ArduinoOutStream cout(Serial);
 
@@ -45,12 +44,11 @@ void alarmISR() {
 void setTimer( int seconds ){
 	DateTime t = rtc_ds.now();
   Serial.print("The time is ");
-  Serial.print(t.text());
+  Serial.println(t.text());
   t = t + TimeSpan(seconds);
-  Serial.print("Setting alarm...");
 	rtc_ds.setAlarm(t);
   Serial.print("Alarm set to ");
-  Serial.print(t.text());
+  Serial.println(t.text());
 }
 
 void feather_sleep( void ){
@@ -78,6 +76,18 @@ void feather_sleep( void ){
 
 }
 
+void log_time( void ){
+  Serial.println("Initializing SD Card");
+  if (!sd.begin(chipSelect, SD_SCK_MHZ(50))) {
+    sd.initErrorHalt();
+  }
+  sdout = ofstream( "test", ios::out | ios::app );
+  DateTime t = rtc_ds.now();
+  char * msg = "Awoke at ";
+  sdout<<msg<<t.text()<<endl;
+  sdout.flush();
+}
+
 void setup() 
 {
 	// Enable outputs to control 5V and 3.3V rails
@@ -88,7 +98,7 @@ void setup()
 	digitalWrite(8, HIGH);
 	
 	Serial.begin(115200);
-  while(!Serial);
+  //while(!Serial);
   Serial.println("Starting setup");
 
   // Wait for USB Serial 
@@ -102,17 +112,11 @@ void setup()
     // Set the RTC to the date & time this sketch was compiled
     rtc_ds.adjust(DateTime(F(__DATE__), F(__TIME__)));
   }
-  Serial.println("Initializing SD Card");
-  if (!sd.begin(chipSelect, SD_SCK_MHZ(50))) {
-    sd.initErrorHalt();
-  }
-  sdout = ofstream( "test", ios::out | ios::app );
   Serial.println("Setup complete");
+  delay(1000); // Give Arduino IDE time to recognize it's running
 }
 void loop(void) {
-  Serial.println("Welcome!");
-  sdout<<rtc_ds.now().text();
-  setTimer(60);
-  delay(1000);
+  log_time();
+  setTimer(10);
   feather_sleep();
 }
