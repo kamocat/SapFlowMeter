@@ -21,35 +21,31 @@ RTC_DS3231 rtc_ds;
 void alarmISR() {
 	// Reset the alarm.
   rtc_ds.armAlarm(1, false);
-	rtc_ds.clearAlarm(1);
+  // Disable this interrupt
+  detachInterrupt(digitalPinToInterrupt(ALARM_PIN));
 }
 
-void printTime( DateTime t ){
-  Serial.print(t.month());
-  Serial.print("/");
-  Serial.print(t.day());
-  Serial.print(" ");
-  Serial.print(t.year());
-  Serial.print(" ");
-  Serial.print(t.hour());
-  Serial.print(":");
-  Serial.print(t.minute());
-  Serial.print(":");
-  Serial.println(t.second());
-}
 // File system object.
 void setTimer( int seconds ){
 	DateTime t = rtc_ds.now();
   Serial.print("The time is ");
-  printTime(t);
+  Serial.print(t.text());
   t = t + TimeSpan(seconds);
   Serial.print("Setting alarm...");
-	rtc_ds.setAlarm(ALM1_MATCH_HOURS, t.second(), t.minute(), t.hour(), 0);
+	rtc_ds.setAlarm(t);
   Serial.print("Alarm set to ");
-  printTime(t);
+  Serial.print(t.text());
 }
 
 void feather_sleep( void ){
+  while(!digitalRead(ALARM_PIN)){
+    Serial.print("Waiting on alarm pin...");
+    delay(10);
+  }
+  // Low-level so we can wake from sleep
+  // I think calling this twice clears the interrupt.
+  attachInterrupt(digitalPinToInterrupt(ALARM_PIN), alarmISR, LOW);
+  attachInterrupt(digitalPinToInterrupt(ALARM_PIN), alarmISR, LOW);
   // Prep for sleep
   Serial.end();
   USBDevice.detach();
@@ -79,8 +75,6 @@ void setup()
   while(!Serial);
   Serial.println("Starting setup");
 
-	// Falling-edge might not wake from sleep. Need more testing.
-	attachInterrupt(digitalPinToInterrupt(ALARM_PIN), alarmISR, LOW);
   // Wait for USB Serial 
   if (! rtc_ds.begin()) {
     Serial.println("Couldn't find RTC");
