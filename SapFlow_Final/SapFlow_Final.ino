@@ -1,8 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 // This program samples lots of temperature data from a tree to measure the sap flow.
-// TODO: Configure the pulse and sleep timing from config.h so it can be configured on the SD card.
-
 ///////////////////////////////////////////////////////////////////////////////
 
 #define ALARM_PIN 12
@@ -36,8 +34,6 @@ const uint32_t SAMPLE_INTERVAL_MS = 1000;
 
 SdFat sd; // File system object.
 
-ofstream sdout;
-char * filename = "sapflow.csv";
 ArduinoOutStream cout(Serial);
 
 // Stores samples and relative time.
@@ -91,7 +87,7 @@ class datastream{
   bool file_open;
 
   public:
-  datastream( RTC_DS3231 &rtc_ds, char * filename ){
+  datastream( RTC_DS3231 &rtc_ds, String filename ){
     clock = &rtc_ds;
     fname = filename;
   }
@@ -120,8 +116,7 @@ RTC_DS3231 rtc_ds;
 volatile uint32_t event_time;
 
 // Data storage object
-datastream d(rtc_ds, filename);
-
+datastream d(rtc_ds, "temperature_log.csv");=
 enum state{
   wake,
   heating,
@@ -160,6 +155,11 @@ void feather_sleep( void ){
   // Prep for sleep
   Serial.end();
   USBDevice.detach();
+  // Disable SPI to save power
+  pinMode(24, INPUT);
+  pinMode(23, INPUT);
+  pinMode(chipSelect, INPUT);
+  // Turn off power rails
   digitalWrite(5, HIGH); digitalWrite(6, LOW);
   digitalWrite(LED_BUILTIN, LOW);
   // Sleep
@@ -168,9 +168,23 @@ void feather_sleep( void ){
   // Prep to resume
   digitalWrite(LED_BUILTIN, HIGH);
   digitalWrite(5, LOW); digitalWrite(6, HIGH);
+  pinMode(24, OUTPUT);
+  pinMode(23, OUTPUT);
+  pinMode(chipSelect, OUTPUT);
   USBDevice.attach();
   Serial.begin(115200);
   sd.begin(chipSelect, SD_SCK_MHZ(1));
+}
+
+// Sleep until the time is a multiple of 5 minutes.
+void round_time( void ){
+  Serial.println("Sleeping until nearest multiple of 5 minutes");
+  DateTime t = rtc_ds.now();
+  t = t + TimeSpan( 5 * 60 );
+  uint8_t minutes = 5*(t.minute()/5);
+  t = DateTime( t.year(), t.month(), t.day(), t.hour(), minutes);
+  setTimer( t );
+  feather_sleep();
 }
 
 void setup() 
@@ -206,6 +220,8 @@ void setup()
   rtd1.begin(MAX31865_4WIRE);  // set to 2WIRE or 4WIRE as necessary
   rtd2.begin(MAX31865_4WIRE);  // set to 2WIRE or 4WIRE as necessary
   Serial.println("\n ** Setup Complete ** ");
+  
+  round_time();
 }
 
 void loop() 
@@ -216,8 +232,6 @@ void loop()
   if ((millis()-event_time) < 60000) {
     switch(measuring_state){
       case wake:
-        digitalWrite(5, LOW); digitalWrite(6, HIGH); // Enable 5V and 3.3V
-        digitalWrite(chipSelect, HIGH);  // Disable SD card for now.
         Serial.print("Awoke at ");
         printTime(rtc_ds.now());
         // Sample for 3 seconds before heating
@@ -243,14 +257,9 @@ void loop()
       default:
         // Make sure we're done logging
         d.flush();
-        // Disable 5V and 3.3V rails
-        digitalWrite(5, HIGH); digitalWrite(6, LOW);
         Serial.println("Powering Down");
-        //set the alarm for sleep time
-        setTimer(177);
-        event_time += 300000;
-        //Sleep until interrupt (It works, but it's annoying for general testing)
-        feather_sleep();
+        //Sleep until the next 5-minute interval
+        round_time();
         measuring_state = wake;
     }
   }
