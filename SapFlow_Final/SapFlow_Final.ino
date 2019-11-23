@@ -10,6 +10,8 @@
 
 #include <OPEnS_RTC.h>
 #include <LowPower.h>
+#include <sdios.h> //for ArduinoOutStream
+
 #include <SPI.h>
 #include "SdFat.h"
 #include "sdios.h"
@@ -20,6 +22,8 @@ Adafruit_MAX31865 rtd2 = Adafruit_MAX31865(A5);
 
 #define RREF 430.0
 #define RNOMINAL 100.0
+
+ArduinoOutStream cout(Serial);
 
 // SD chip select pin.  Be sure to disable any other SPI devices such as Enet.
 const uint8_t chipSelect = 10;
@@ -32,27 +36,25 @@ const uint32_t SAMPLE_INTERVAL_MS = 1000;
 
 SdFat sd; // File system object.
 
-char * filename = "test4.csv";
+ofstream sdout;
+char * filename = "sapflow.csv";
 ArduinoOutStream cout(Serial);
 
 // Stores samples and relative time.
 // Adapt this datatype to your measurement needs.
 class sample{
   private:
-  uint32_t t;  // milliseconds
   float channel1;
   float channel2;
 
   public:
   sample( Adafruit_MAX31865 r1, Adafruit_MAX31865 r2 ){
-    t = millis();
     r1.readRTD();
     r2.readRTD();
     channel1 = r1.temperature(RNOMINAL, RREF);
     channel2 = r2.temperature(RNOMINAL, RREF);
   }
   sample( size_t oversample ){
-    t = millis();
     channel1 = 0;
     channel2 = 0;
     for( auto i = 0; i < oversample; ++i ){
@@ -78,33 +80,15 @@ class sample{
     stream << setw(6) << "A0" << ',';
     stream << setw(6) << "A1" << '\n';
   }
-  uint32_t time( void ){
-    return t;
-  }
 };
 
 class datastream{
   private:
-  uint32_t t0;  // milliseconds
   DateTime date;
   RTC_DS3231 * clock;
   char * fname;
   ofstream sdout;
   bool file_open;
-  void timestamp( ofstream &cout, uint32_t sample_time ){
-    // Calculate milliseconds from start of dataset
-    uint32_t t = sample_time - t0;
-    // Offset date according to seconds elapsed
-    DateTime d = date + TimeSpan(t/1000);
-    t = t % 1000; // Calculate remainder milliseconds
-    // Print date and time with milliseconds
-    char old = cout.fill('0');
-    cout<<setw(4)<<d.year()<<'-';
-    cout<<setw(2)<<(int)d.month()<<'-'<<setw(2)<<(int)d.day()<<' ';
-    cout<<setw(2)<<(int)d.hour()<<':'<<setw(2)<<(int)d.minute()<<':';
-    cout<<setw(2)<<(int)d.second()<<'.'<<setw(3)<< t <<"  ,";
-    cout.fill(old);
-  }
 
   public:
   datastream( RTC_DS3231 &rtc_ds, char * filename ){
@@ -139,73 +123,70 @@ volatile uint32_t event_time;
 datastream d(rtc_ds, filename);
 
 enum state{
-	wake,
-	heating,
-	cooling,
-	sleep
+  wake,
+  heating,
+  cooling,
+  sleep
 } measuring_state;
 
 void alarmISR() {
-	// Reset the alarm.
+  // Reset the alarm.
   rtc_ds.armAlarm(1, false);
-	rtc_ds.clearAlarm(1);
-	event_time = millis();
-}
 
-void printTime( DateTime t ){
-  Serial.print(t.month());
-  Serial.print("/");
-  Serial.print(t.day());
-  Serial.print(" ");
-  Serial.print(t.year());
-  Serial.print(" ");
-  Serial.print(t.hour());
-  Serial.print(":");
-  Serial.print(t.minute());
-  Serial.print(":");
-  Serial.println(t.second());
+  // Disable this interrupt
+  detachInterrupt(digitalPinToInterrupt(ALARM_PIN));
+  event_time = millis();
 }
 
 void setTimer( int seconds ){
-	DateTime t = rtc_ds.now();
+  DateTime t = rtc_ds.now();
   Serial.print("The time is ");
-  printTime(t);
+  Serial.println(t.text());
   t = t + TimeSpan(seconds);
-	rtc_ds.setAlarm(ALM1_MATCH_HOURS, t.second(), t.minute(), t.hour(), 0);
+  rtc_ds.setAlarm(t);
   Serial.print("Alarm set to ");
-  printTime(t);
+  Serial.println(t.text());
 }
 
 void feather_sleep( void ){
+  while(!digitalRead(ALARM_PIN)){
+    Serial.print("Waiting on alarm pin...");
+    delay(10);
+  }
+  // Low-level so we can wake from sleep
+  // I think calling this twice clears the interrupt.
+  attachInterrupt(digitalPinToInterrupt(ALARM_PIN), alarmISR, LOW);
+  attachInterrupt(digitalPinToInterrupt(ALARM_PIN), alarmISR, LOW);
   // Prep for sleep
   Serial.end();
   USBDevice.detach();
-//  digitalWrite(LED_BUILTIN, LOW);
-
+  digitalWrite(5, HIGH); digitalWrite(6, LOW);
+  digitalWrite(LED_BUILTIN, LOW);
   // Sleep
   LowPower.standby();
 
   // Prep to resume
+  digitalWrite(LED_BUILTIN, HIGH);
+  digitalWrite(5, LOW); digitalWrite(6, HIGH);
   USBDevice.attach();
   Serial.begin(115200);
-//  digitalWrite(LED_BUILTIN, HIGH);
+  sd.begin(chipSelect, SD_SCK_MHZ(1));
 }
 
 void setup() 
 {
-	// Enable outputs to control 5V and 3.3V rails
-	pinMode(5, OUTPUT); pinMode(6, OUTPUT);
-	pinMode(HEATER, OUTPUT);
-	pinMode(ALARM_PIN, INPUT_PULLUP);
-	digitalWrite(HEATER, LOW);
-	measuring_state = wake;
-	event_time = millis();
-	
-	Serial.begin(115200);
+  // Enable outputs to control 5V and 3.3V rails
+  pinMode(5, OUTPUT); pinMode(6, OUTPUT);
+  digitalWrite(5, LOW); digitalWrite(6, HIGH);
+  pinMode(HEATER, OUTPUT);
+  pinMode(ALARM_PIN, INPUT_PULLUP);
+  digitalWrite(HEATER, LOW);
+  measuring_state = wake;
+  event_time = millis();
+  
+  Serial.begin(115200);
   Serial.println("Starting setup");
 
-	// Falling-edge might not wake from sleep. Need more testing.
-	attachInterrupt(digitalPinToInterrupt(ALARM_PIN), alarmISR, LOW);
   // RTC Timer settings here
   if (! rtc_ds.begin()) {
     Serial.println("Couldn't find RTC");
@@ -216,59 +197,61 @@ void setup()
     // Set the RTC to the date & time this sketch was compiled
     rtc_ds.adjust(DateTime(F(__DATE__), F(__TIME__)));
   }
+  
+  Serial.println("Initializing SD Card");
   if (!sd.begin(chipSelect, SD_SCK_MHZ(50))) {
     sd.initErrorHalt();
   }
 
-  rtd1.begin(MAX31865_2WIRE);  // set to 2WIRE or 4WIRE as necessary
-  rtd2.begin(MAX31865_2WIRE);  // set to 2WIRE or 4WIRE as necessary
-	Serial.println("\n ** Setup Complete ** ");
+  rtd1.begin(MAX31865_4WIRE);  // set to 2WIRE or 4WIRE as necessary
+  rtd2.begin(MAX31865_4WIRE);  // set to 2WIRE or 4WIRE as necessary
+  Serial.println("\n ** Setup Complete ** ");
 }
 
 void loop() 
 {
-	//delay(100);	// Slow down the loop a little
   sample s = sample(rtd1, rtd2); // Sample RTDs
   s.print(cout);
   d.append(s);  // Log to SD card
-	if ((millis()-event_time) < 60000) {
-		switch(measuring_state){
-			case wake:
-				digitalWrite(5, LOW); digitalWrite(6, HIGH); // Enable 5V and 3.3V
-				digitalWrite(chipSelect, HIGH);  // Disable SD card for now.
-				Serial.print("Awoke at ");
-				printTime(rtc_ds.now());
-				// Sample for 3 seconds before heating
-				event_time += 3000;
-				measuring_state = heating;
-				break;
-			case heating:
-				digitalWrite(HEATER, HIGH);
-				Serial.print("Heater On at ");
-				printTime(rtc_ds.now());
-				//Set the alarm for heating time
-				event_time += 6000;
-				measuring_state = cooling;
-				break;
-			case cooling:
-				digitalWrite(HEATER, LOW);
-				Serial.print("Heater Off at ");
-				printTime(rtc_ds.now());
-				//set the alarm for cooling time
-				event_time += 114000;
-				measuring_state = sleep;
-				break;
-			default:
+  if ((millis()-event_time) < 60000) {
+    switch(measuring_state){
+      case wake:
+        digitalWrite(5, LOW); digitalWrite(6, HIGH); // Enable 5V and 3.3V
+        digitalWrite(chipSelect, HIGH);  // Disable SD card for now.
+        Serial.print("Awoke at ");
+        printTime(rtc_ds.now());
+        // Sample for 3 seconds before heating
+        event_time += 3000;
+        measuring_state = heating;
+        break;
+      case heating:
+        digitalWrite(HEATER, HIGH);
+        Serial.print("Heater On at ");
+        printTime(rtc_ds.now());
+        //Set the alarm for heating time
+        event_time += 6000;
+        measuring_state = cooling;
+        break;
+      case cooling:
+        digitalWrite(HEATER, LOW);
+        Serial.print("Heater Off at ");
+        printTime(rtc_ds.now());
+        //set the alarm for cooling time
+        event_time += 114000;
+        measuring_state = sleep;
+        break;
+      default:
         // Make sure we're done logging
         d.flush();
-				// Disable 5V and 3.3V rails
-				digitalWrite(5, HIGH); digitalWrite(6, LOW);
-				Serial.println("Powering Down");
-				//set the alarm for sleep time
-				setTimer(177);
-				//Sleep until interrupt (It works, but it's annoying for general testing)
+        // Disable 5V and 3.3V rails
+        digitalWrite(5, HIGH); digitalWrite(6, LOW);
+        Serial.println("Powering Down");
+        //set the alarm for sleep time
+        setTimer(177);
+        event_time += 300000;
+        //Sleep until interrupt (It works, but it's annoying for general testing)
         feather_sleep();
-				measuring_state = wake;
-		}
-	}
+        measuring_state = wake;
+    }
+  }
 }
