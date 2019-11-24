@@ -23,6 +23,12 @@ Adafruit_MAX31865 rtd2 = Adafruit_MAX31865(A5);
 
 ArduinoOutStream cout(Serial);
 
+// Instance of our RTC
+RTC_DS3231 rtc_ds;
+
+// Time used for state transitions
+volatile uint32_t event_time;
+
 // SD chip select pin.  Be sure to disable any other SPI devices such as Enet.
 const uint8_t chipSelect = 10;
 
@@ -34,23 +40,24 @@ const uint32_t SAMPLE_INTERVAL_MS = 1000;
 
 SdFat sd; // File system object.
 
-ArduinoOutStream cout(Serial);
-
 // Stores samples and relative time.
 // Adapt this datatype to your measurement needs.
 class sample{
   private:
   float channel1;
   float channel2;
+  DateTime t;
 
   public:
   sample( Adafruit_MAX31865 r1, Adafruit_MAX31865 r2 ){
+    t = rtc_ds.now();
     r1.readRTD();
     r2.readRTD();
     channel1 = r1.temperature(RNOMINAL, RREF);
     channel2 = r2.temperature(RNOMINAL, RREF);
   }
   sample( size_t oversample ){
+    t = rtc_ds.now();
     channel1 = 0;
     channel2 = 0;
     for( auto i = 0; i < oversample; ++i ){
@@ -61,13 +68,8 @@ class sample{
   sample( void ){
     sample( 1 );
   }
-  // One version for printing to serial
-  void print( ArduinoOutStream &stream){
-    stream << setw(6) << channel1 << ',';
-    stream << setw(6) << channel2 << '\n';
-  }
-  // Another version for printing to a file
-  void print( ofstream &stream){
+  void print( ostream &stream){
+    stream << t.text() << ", ";
     stream << setw(6) << channel1 << ',';
     stream << setw(6) << channel2 << '\n';
   }
@@ -80,43 +82,32 @@ class sample{
 
 class datastream{
   private:
-  DateTime date;
-  RTC_DS3231 * clock;
-  char * fname;
+  String fname;
   ofstream sdout;
   bool file_open;
 
   public:
-  datastream( RTC_DS3231 &rtc_ds, String filename ){
-    clock = &rtc_ds;
+  datastream( String filename ){
     fname = filename;
   }
   void flush( void ){
-    sdout.flush();
     sdout.close();
     file_open = false;
   }
   void append( sample p ){
     if( !file_open ){
-      date = clock->now();
-      t0 = p.time();
-      sdout = ofstream( fname, ios::out | ios::app );
+      sdout = ofstream( fname.c_str(), ios::out | ios::app );
       file_open = true;
     }
-    timestamp(sdout, p.time());
     p.print(sdout);
   }
 };
 
 //------------------------------------------------------------------------------
-// Instance of our RTC
-RTC_DS3231 rtc_ds;
-
-// Time used for state transitions
-volatile uint32_t event_time;
 
 // Data storage object
-datastream d(rtc_ds, "temperature_log.csv");=
+datastream d("temperature_log.csv");
+
 enum state{
   wake,
   heating,
@@ -131,16 +122,6 @@ void alarmISR() {
   // Disable this interrupt
   detachInterrupt(digitalPinToInterrupt(ALARM_PIN));
   event_time = millis();
-}
-
-void setTimer( int seconds ){
-  DateTime t = rtc_ds.now();
-  Serial.print("The time is ");
-  Serial.println(t.text());
-  t = t + TimeSpan(seconds);
-  rtc_ds.setAlarm(t);
-  Serial.print("Alarm set to ");
-  Serial.println(t.text());
 }
 
 void feather_sleep( void ){
@@ -176,14 +157,18 @@ void feather_sleep( void ){
   sd.begin(chipSelect, SD_SCK_MHZ(1));
 }
 
-// Sleep until the time is a multiple of 5 minutes.
-void round_time( void ){
+// Sleep until the time is a round multiple of the minute inteval.
+// Produces unexpected bevahior for non-factors of 60 (7, 8, 9, 11, etc)
+void sleep_cycle( int interval = 5 ){
   Serial.println("Sleeping until nearest multiple of 5 minutes");
   DateTime t = rtc_ds.now();
-  t = t + TimeSpan( 5 * 60 );
-  uint8_t minutes = 5*(t.minute()/5);
-  t = DateTime( t.year(), t.month(), t.day(), t.hour(), minutes);
-  setTimer( t );
+  t = t + TimeSpan( interval * 60 );
+  uint8_t minutes = interval*(t.minute()/interval);
+  rtc_ds.setAlarm(ALM2_MATCH_MINUTES, minutes, 0, 0);
+  Serial.print("Alarm set to ");
+  t = rtc_ds.getAlarm(2);
+  Serial.println(t.text());
+  delay(1000);
   feather_sleep();
 }
 
@@ -221,7 +206,7 @@ void setup()
   rtd2.begin(MAX31865_4WIRE);  // set to 2WIRE or 4WIRE as necessary
   Serial.println("\n ** Setup Complete ** ");
   
-  round_time();
+  sleep_cycle();
 }
 
 void loop() 
@@ -233,7 +218,7 @@ void loop()
     switch(measuring_state){
       case wake:
         Serial.print("Awoke at ");
-        printTime(rtc_ds.now());
+        Serial.println(rtc_ds.now().text());
         // Sample for 3 seconds before heating
         event_time += 3000;
         measuring_state = heating;
@@ -241,7 +226,7 @@ void loop()
       case heating:
         digitalWrite(HEATER, HIGH);
         Serial.print("Heater On at ");
-        printTime(rtc_ds.now());
+        Serial.println(rtc_ds.now().text());
         //Set the alarm for heating time
         event_time += 6000;
         measuring_state = cooling;
@@ -249,9 +234,9 @@ void loop()
       case cooling:
         digitalWrite(HEATER, LOW);
         Serial.print("Heater Off at ");
-        printTime(rtc_ds.now());
+        Serial.println(rtc_ds.now().text());
         //set the alarm for cooling time
-        event_time += 114000;
+        event_time += 40000;
         measuring_state = sleep;
         break;
       default:
@@ -259,7 +244,7 @@ void loop()
         d.flush();
         Serial.println("Powering Down");
         //Sleep until the next 5-minute interval
-        round_time();
+        sleep_cycle( 5 );
         measuring_state = wake;
     }
   }
