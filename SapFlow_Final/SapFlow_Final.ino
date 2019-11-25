@@ -40,6 +40,21 @@ const uint32_t SAMPLE_INTERVAL_MS = 1000;
 
 SdFat sd; // File system object.
 
+/* Checks if the filename exists.
+* If so, appends an integer.
+* Returns the new filename it came up with.*/
+String newfile( String fname, String suffix=".csv" ){
+  String temp = fname + suffix;
+  int i = 0;
+  while(sd.exists(temp.c_str())){
+    ++i;
+    char ones = i%10 + '0';
+    char tens = i/10 + '0';
+    temp = fname + '(' + tens + ones + ')' + suffix;
+  }
+  return temp;
+}
+
 // Stores samples and relative time.
 // Adapt this datatype to your measurement needs.
 class sample{
@@ -49,6 +64,11 @@ class sample{
   DateTime t;
 
   public:
+  sample( const sample &old ){
+    channel1 = old.channel1;
+    channel2 = old.channel2;
+    t = old.t;
+  }
   sample( Adafruit_MAX31865 r1, Adafruit_MAX31865 r2 ){
     t = rtc_ds.now();
     r1.readRTD();
@@ -78,6 +98,15 @@ class sample{
     stream << setw(6) << "A0" << ',';
     stream << setw(6) << "A1" << '\n';
   }
+  float channel(int num){
+    if( num == 1 )
+      return channel1;
+    else
+      return channel2;
+  }
+  DateTime time(void){
+    return t;
+  }
 };
 
 class datastream{
@@ -103,10 +132,21 @@ class datastream{
   }
 };
 
+float calc_sapflow( sample &baseline, sample &peak ){
+  float upper = peak.channel(1) - baseline.channel(1);
+  float lower = peak.channel(2) - baseline.channel(2);
+  return log(upper/lower);
+}
+
 //------------------------------------------------------------------------------
 
 // Data storage object
 datastream d("temperature_log.csv");
+
+// Filename for calculated sap flow
+String filename;
+// File handle for the file
+ofstream sapfile;
 
 enum state{
   wake,
@@ -198,9 +238,16 @@ void setup()
   }
   
   Serial.println("Initializing SD Card");
-  if (!sd.begin(chipSelect, SD_SCK_MHZ(50))) {
+  if (!sd.begin(chipSelect, SD_SCK_MHZ(1))) {
     sd.initErrorHalt();
   }
+  
+  // Make sure we're not overwriting an existing file.
+  filename = newfile("sapflow");
+  // Write the headers for the file
+  sapfile = ofstream(filename.c_str(), ios::out);
+  sapfile << "Date, Upper baseline, Lower baseline, Upper peak, Lower peak, calculated sapflow" << endl;
+  sapfile.close();
 
   rtd1.begin(MAX31865_4WIRE);  // set to 2WIRE or 4WIRE as necessary
   rtd2.begin(MAX31865_4WIRE);  // set to 2WIRE or 4WIRE as necessary
@@ -209,6 +256,8 @@ void setup()
   sleep_cycle();
 }
 
+sample baseline, pulse;
+float sapflow;
 void loop() 
 {
   sample s = sample(rtd1, rtd2); // Sample RTDs
@@ -222,6 +271,7 @@ void loop()
         // Sample for 3 seconds before heating
         event_time += 3000;
         measuring_state = heating;
+        baseline = s;
         break;
       case heating:
         digitalWrite(HEATER, HIGH);
@@ -239,10 +289,24 @@ void loop()
         event_time += 40000;
         measuring_state = sleep;
         break;
-      default:
+      case sleep:
         // Make sure we're done logging
         d.flush();
-        Serial.println("Powering Down");
+        
+        // Calculate the sapflow
+        pulse = s;
+        sapflow = calc_sapflow(baseline, pulse);
+        // Write the sapflow to the file.
+        sapfile = ofstream(filename.c_str(), ios::out | ios::app);
+        sapfile << baseline.time().text() << ", ";
+        sapfile << baseline.channel(1) << ", ";
+        sapfile << baseline.channel(2) << ", ";
+        sapfile << pulse.channel(1) << ", ";
+        sapfile << pulse.channel(2) << ", ";
+        sapfile << sapflow << endl;
+        sapfile.close();
+        // Continue into default case
+      default:
         //Sleep until the next 5-minute interval
         sleep_cycle( 5 );
         measuring_state = wake;
