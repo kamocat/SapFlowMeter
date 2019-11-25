@@ -132,12 +132,6 @@ class datastream{
   }
 };
 
-float calc_sapflow( sample &baseline, sample &peak ){
-  float upper = peak.channel(1) - baseline.channel(1);
-  float lower = peak.channel(2) - baseline.channel(2);
-  return log(upper/lower);
-}
-
 //------------------------------------------------------------------------------
 
 // Data storage object
@@ -214,6 +208,9 @@ void sleep_cycle( int interval = 5 ){
 
 void setup() 
 {
+  pinMode(13, OUTPUT); // Test if we're even reaching setup
+  digitalWrite(13, LOW);
+  
   // Enable outputs to control 5V and 3.3V rails
   pinMode(5, OUTPUT); pinMode(6, OUTPUT);
   digitalWrite(5, LOW); digitalWrite(6, HIGH);
@@ -244,10 +241,12 @@ void setup()
   
   // Make sure we're not overwriting an existing file.
   filename = newfile("sapflow");
+  cout << "Creating new file " << filename.c_str() << "...";
   // Write the headers for the file
   sapfile = ofstream(filename.c_str(), ios::out);
   sapfile << "Date, Upper baseline, Lower baseline, Upper peak, Lower peak, calculated sapflow" << endl;
   sapfile.close();
+  cout << "Success"<<endl;
 
   rtd1.begin(MAX31865_4WIRE);  // set to 2WIRE or 4WIRE as necessary
   rtd2.begin(MAX31865_4WIRE);  // set to 2WIRE or 4WIRE as necessary
@@ -257,7 +256,7 @@ void setup()
 }
 
 sample baseline, pulse;
-float sapflow;
+float upper, lower, sapflow;
 void loop() 
 {
   sample s = sample(rtd1, rtd2); // Sample RTDs
@@ -295,7 +294,9 @@ void loop()
         
         // Calculate the sapflow
         pulse = s;
-        sapflow = calc_sapflow(baseline, pulse);
+        upper = pulse.channel(1) - baseline.channel(1);
+        lower = pulse.channel(2) - baseline.channel(2);
+        sapflow = log(upper/lower);
         // Write the sapflow to the file.
         sapfile = ofstream(filename.c_str(), ios::out | ios::app);
         sapfile << baseline.time().text() << ", ";
