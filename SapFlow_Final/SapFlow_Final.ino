@@ -85,8 +85,8 @@ class sample{
   }
   void print( ostream &stream){
     stream << t.text() << ", ";
-    stream << setw(6) << channel1 << ',';
-    stream << setw(6) << channel2 << '\n';
+    stream << setw(6) << channel1 << ", ";
+    stream << setw(6) << channel2 << "\r\n";
   }
   // Print the header for a csv
   void header( ofstream &stream ){
@@ -227,7 +227,7 @@ void setup()
   }
   
   Serial.println("Initializing SD Card");
-  if (!sd.begin(chipSelect, SD_SCK_MHZ(50))) {
+  if (!sd.begin(chipSelect, SD_SCK_MHZ(1))) {
     sd.initErrorHalt();
   }
 
@@ -247,6 +247,8 @@ void setup()
   sleep_cycle();
 }
 
+float upper_baseline, lower_baseline;
+float upper_peak, lower_peak, sapflow;
 void loop() 
 {
   sample s = sample(rtd1, rtd2); // Sample RTDs
@@ -260,6 +262,8 @@ void loop()
         // Sample for 3 seconds before heating
         event_time += 3000;
         measuring_state = heating;
+        upper_baseline = s.channel(1);
+        lower_baseline = s.channel(2);
         break;
       case heating:
         digitalWrite(HEATER, HIGH);
@@ -280,7 +284,18 @@ void loop()
       default:
         // Make sure we're done logging
         d.flush();
-        Serial.println("Powering Down");
+        upper_peak = s.channel(1);
+        lower_peak = s.channel(2);
+        sapflow = log((upper_peak-upper_baseline)/(lower_peak-lower_baseline));
+        // Write the sapflow to the file.
+        sapfile = ofstream(filename.c_str(), ios::out | ios::app);
+        sapfile << s.time().text() << ", ";
+        sapfile << upper_baseline << ", ";
+        sapfile << lower_baseline << ", ";
+        sapfile << upper_peak << ", ";
+        sapfile << lower_peak << ", ";
+        sapfile << sapflow << endl;
+        sapfile.close();
         //Sleep until the next 5-minute interval
         sleep_cycle( 5 );
         measuring_state = wake;
