@@ -64,11 +64,6 @@ class sample{
   DateTime t;
 
   public:
-  sample( const sample &old ){
-    channel1 = old.channel1;
-    channel2 = old.channel2;
-    t = old.t;
-  }
   sample( Adafruit_MAX31865 r1, Adafruit_MAX31865 r2 ){
     t = rtc_ds.now();
     r1.readRTD();
@@ -208,9 +203,6 @@ void sleep_cycle( int interval = 5 ){
 
 void setup() 
 {
-  pinMode(13, OUTPUT); // Test if we're even reaching setup
-  digitalWrite(13, LOW);
-  
   // Enable outputs to control 5V and 3.3V rails
   pinMode(5, OUTPUT); pinMode(6, OUTPUT);
   digitalWrite(5, LOW); digitalWrite(6, HIGH);
@@ -235,10 +227,10 @@ void setup()
   }
   
   Serial.println("Initializing SD Card");
-  if (!sd.begin(chipSelect, SD_SCK_MHZ(1))) {
+  if (!sd.begin(chipSelect, SD_SCK_MHZ(50))) {
     sd.initErrorHalt();
   }
-  
+
   // Make sure we're not overwriting an existing file.
   filename = newfile("sapflow");
   cout << "Creating new file " << filename.c_str() << "...";
@@ -255,8 +247,6 @@ void setup()
   sleep_cycle();
 }
 
-sample baseline, pulse;
-float upper, lower, sapflow;
 void loop() 
 {
   sample s = sample(rtd1, rtd2); // Sample RTDs
@@ -270,7 +260,6 @@ void loop()
         // Sample for 3 seconds before heating
         event_time += 3000;
         measuring_state = heating;
-        baseline = s;
         break;
       case heating:
         digitalWrite(HEATER, HIGH);
@@ -288,26 +277,10 @@ void loop()
         event_time += 40000;
         measuring_state = sleep;
         break;
-      case sleep:
+      default:
         // Make sure we're done logging
         d.flush();
-        
-        // Calculate the sapflow
-        pulse = s;
-        upper = pulse.channel(1) - baseline.channel(1);
-        lower = pulse.channel(2) - baseline.channel(2);
-        sapflow = log(upper/lower);
-        // Write the sapflow to the file.
-        sapfile = ofstream(filename.c_str(), ios::out | ios::app);
-        sapfile << baseline.time().text() << ", ";
-        sapfile << baseline.channel(1) << ", ";
-        sapfile << baseline.channel(2) << ", ";
-        sapfile << pulse.channel(1) << ", ";
-        sapfile << pulse.channel(2) << ", ";
-        sapfile << sapflow << endl;
-        sapfile.close();
-        // Continue into default case
-      default:
+        Serial.println("Powering Down");
         //Sleep until the next 5-minute interval
         sleep_cycle( 5 );
         measuring_state = wake;
