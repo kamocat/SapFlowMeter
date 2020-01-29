@@ -105,20 +105,7 @@ void loop()
       while(!myScale.available());
       long A0 = myScale.getReading();
       myScale.setChannel(1);
-      cout<<temp<<", "<<A0<<", "<<A1<<endl;
-      sdout<<temp<<", "<<A0<<", "<<A1<<endl;
-      delay(100);
-    }
-    myScale.setChannel(0);
-    myScale.calibrateAFE(); //Does an internal calibration.
-    for( int i = 0; i < 10; ++i ){
-      while(!myScale.available());
-      long A0 = myScale.getReading();
-      myScale.setChannel(1);
-      while(!myScale.available());
-      long A1 = myScale.getReading();
-      myScale.setChannel(0);
-      cout<<temp<<", "<<A0<<", "<<A1<<endl;
+      cout<<A0<<", "<<A1<<endl;
       sdout<<temp<<", "<<A0<<", "<<A1<<endl;
       delay(100);
     }
