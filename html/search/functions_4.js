@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['enable_109',['enable',['../classWatchdogSAMD.html#a9dcc8c7182d39f25fa26cffbe9a686dd',1,'WatchdogSAMD']]]
+  ['feather_5fsleep_87',['feather_sleep',['../schedule_8cpp.html#ae74e924bdba3f5da2de33ca0c67a1fa2',1,'feather_sleep(void):&#160;schedule.cpp'],['../schedule_8h.html#ae74e924bdba3f5da2de33ca0c67a1fa2',1,'feather_sleep(void):&#160;schedule.cpp']]]
 ];

@@ -180,29 +180,9 @@ static uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>packet_len<
 </dl>
 
 <p class="definition">Definition at line <a class="el" href="lora_8cpp_source.html#l00058">58</a> of file <a class="el" href="lora_8cpp_source.html">lora.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;{</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  Serial.print(<span class="stringliteral">&quot;Building message...&quot;</span>);</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  <span class="keyword">const</span> <span class="keywordtype">int</span> capacity=JSON_OBJECT_SIZE(10);</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  StaticJsonDocument&lt;capacity&gt;doc;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  <span class="keywordtype">char</span> str1[15];</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <span class="keywordtype">char</span> str2[15];</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  <span class="keywordtype">char</span> str3[15];</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  <span class="keywordtype">char</span> * tstring = <a class="code" href="schedule_8h.html#a4c06781bd70442b43eec7c92d3e7ea3a">rtc_ds</a>.now().text();</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  tstring += 11; <span class="comment">//&lt; skip the date, just use the time</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;  ftoa(flow, str1);</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  ftoa(temp, str3);</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;  ftoa(maxtemp, str2);</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  doc[<span class="stringliteral">&quot;flow&quot;</span>].set(str1);</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;  doc[<span class="stringliteral">&quot;weight&quot;</span>].set(<span class="stringliteral">&quot;0&quot;</span>);</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  doc[<span class="stringliteral">&quot;temp&quot;</span>].set(str3);</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;  doc[<span class="stringliteral">&quot;maxtemp&quot;</span>].set(str2);</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  doc[<span class="stringliteral">&quot;id&quot;</span>].set(<span class="stringliteral">&quot;0&quot;</span>);</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  doc[<span class="stringliteral">&quot;time&quot;</span>].set(tstring);</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  packet_len = serializeJson(doc,radiopacket);</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;  Serial.println(radiopacket);</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  radiopacket[packet_len] = 0;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;}</div>
-</div><!-- fragment -->
+
+<p class="reference">Referenced by <a class="el" href="measure_8cpp_source.html#l00091">delta()</a>.</p>
+
 </div>
 </div>
 <a id="a5406703a916059feeaac0ce650e6ceb7"></a>
@@ -227,36 +207,11 @@ static uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>packet_len<
 <p>The default transmitter power is 13dBm, using PA_BOOST. If you are using RFM95/96/97/98 modules which uses the PA_BOOST transmitter pin, then you can set transmitter powers from 5 to 23 dBm:</p>
 
 <p class="definition">Definition at line <a class="el" href="lora_8cpp_source.html#l00017">17</a> of file <a class="el" href="lora_8cpp_source.html">lora.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;{</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;  digitalWrite(<a class="code" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91a1abe8e017ead2df3bf6976ab2f9d1a48">RFM95_CS</a>, LOW); <span class="comment">//&lt; enable LoRa</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;  pinMode(<a class="code" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91a9cd34561d6acfeed85d0245d83752c82">RFM95_RST</a>, OUTPUT);</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;  digitalWrite(<a class="code" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91a9cd34561d6acfeed85d0245d83752c82">RFM95_RST</a>, HIGH);</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;  <span class="comment">// manual reset</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;  digitalWrite(<a class="code" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91a9cd34561d6acfeed85d0245d83752c82">RFM95_RST</a>, LOW);</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;  delay(10);</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;  digitalWrite(<a class="code" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91a9cd34561d6acfeed85d0245d83752c82">RFM95_RST</a>, HIGH);</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;  delay(10);</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;  <span class="keywordflow">while</span> (!manager.init()) {</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    Serial.println(<span class="stringliteral">&quot;LoRa radio init failed&quot;</span>);</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    Serial.println(<span class="stringliteral">&quot;Uncomment &#39;#define SERIAL_DEBUG&#39; in RH_RF95.cpp for detailed debug info&quot;</span>);</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keywordflow">while</span> (1);</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;  }</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;  Serial.println(<span class="stringliteral">&quot;LoRa radio init OK!&quot;</span>);</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;  <span class="comment">// Defaults after init are 434.0MHz, modulation GFSK_Rb250Fd250, +13dbM</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;  <span class="keywordflow">if</span> (!rf95.setFrequency(<a class="code" href="lora_8h.html#a2240e28a2e7f70d896b1a46ea3c5ce39">RF95_FREQ</a>)) {</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    Serial.println(<span class="stringliteral">&quot;setFrequency failed&quot;</span>);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordflow">while</span> (1);</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;  }</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;  Serial.print(<span class="stringliteral">&quot;Set Freq to: &quot;</span>); Serial.println(<a class="code" href="lora_8h.html#a2240e28a2e7f70d896b1a46ea3c5ce39">RF95_FREQ</a>);</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  rf95.setTxPower(23, <span class="keyword">false</span>);</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  digitalWrite(<a class="code" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91a1abe8e017ead2df3bf6976ab2f9d1a48">RFM95_CS</a>, HIGH); <span class="comment">//&lt; disable LoRa</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;}</div>
-</div><!-- fragment -->
+
+<p class="reference">References <a class="el" href="pinout_8h_source.html#l00028">RFM95_CS</a>, and <a class="el" href="pinout_8h_source.html#l00029">RFM95_RST</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="measure_8cpp_source.html#l00091">delta()</a>.</p>
+
 </div>
 </div>
 <a id="a759190db192ee81162c88decd75d3a7d"></a>
@@ -279,43 +234,13 @@ static uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>packet_len<
 <p>Sends the string made by build_json() to the base station over LoRa. Calling this function without first calling <a class="el" href="lora_8h.html#a081e4c64303e45009a39fd81bdf5eb7f" title="Builds a JSON string to send over LoRa.">build_msg()</a> produces undefined behavior. </p>
 
 <p class="definition">Definition at line <a class="el" href="lora_8cpp_source.html#l00083">83</a> of file <a class="el" href="lora_8cpp_source.html">lora.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;{</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  digitalWrite(<a class="code" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91a1abe8e017ead2df3bf6976ab2f9d1a48">RFM95_CS</a>, LOW); <span class="comment">//&lt; enable LoRa</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  Serial.println(<span class="stringliteral">&quot;Transmitting...&quot;</span>); <span class="comment">//&lt; Send a message to rf95_server</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  <span class="comment">// Send a message to manager_server</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;  <span class="keywordflow">if</span> (manager.sendtoWait((uint8_t *)radiopacket, packet_len, <a class="code" href="lora_8h.html#aa6cecb8c404241c624e83aee8a3979d2">SERVER_ADDRESS</a>))</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;  {</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="comment">// Now wait for a reply from the server</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    uint8_t from;   </div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keywordflow">if</span> (manager.recvfromAckTimeout((uint8_t *)radiopacket, &amp;packet_len, 2000, &amp;from))</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    {</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;      Serial.print(<span class="stringliteral">&quot;got reply from : 0x&quot;</span>);</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;      Serial.print(from, HEX);</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;      Serial.print(<span class="stringliteral">&quot;: &quot;</span>);</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;      Serial.println(radiopacket);</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;      Serial.print(<span class="stringliteral">&quot;RSSI: &quot;</span>);</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;      Serial.println(rf95.lastRssi(), DEC);</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    }</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    {</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;      Serial.println(<span class="stringliteral">&quot;No reply, is server running?&quot;</span>);</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    }</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;  }</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;  <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    Serial.println(<span class="stringliteral">&quot;sendtoWait failed&quot;</span>);</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;  digitalWrite(<a class="code" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91a1abe8e017ead2df3bf6976ab2f9d1a48">RFM95_CS</a>, HIGH); <span class="comment">//&lt; disable LoRa</span></div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;}</div>
-</div><!-- fragment -->
+
+<p class="reference">References <a class="el" href="pinout_8h_source.html#l00028">RFM95_CS</a>.</p>
+
 </div>
 </div>
 </div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="aschedule_8h_html_a4c06781bd70442b43eec7c92d3e7ea3a"><div class="ttname"><a href="schedule_8h.html#a4c06781bd70442b43eec7c92d3e7ea3a">rtc_ds</a></div><div class="ttdeci">static RTC_DS3231 rtc_ds</div><div class="ttdoc">Instance of our real-time clock.</div><div class="ttdef"><b>Definition:</b> <a href="schedule_8h_source.html#l00011">schedule.h:11</a></div></div>
-<div class="ttc" id="apinout_8h_html_ad3ebeb23ad60165264117c8103271e91a9cd34561d6acfeed85d0245d83752c82"><div class="ttname"><a href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91a9cd34561d6acfeed85d0245d83752c82">RFM95_RST</a></div><div class="ttdeci">@ RFM95_RST</div><div class="ttdoc">Reset pin used for LoRa. Output. Active-low?</div><div class="ttdef"><b>Definition:</b> <a href="pinout_8h_source.html#l00029">pinout.h:29</a></div></div>
-<div class="ttc" id="alora_8h_html_a2240e28a2e7f70d896b1a46ea3c5ce39"><div class="ttname"><a href="lora_8h.html#a2240e28a2e7f70d896b1a46ea3c5ce39">RF95_FREQ</a></div><div class="ttdeci">#define RF95_FREQ</div><div class="ttdoc">Radio frequency (in MHz).</div><div class="ttdef"><b>Definition:</b> <a href="lora_8h_source.html#l00014">lora.h:14</a></div></div>
-<div class="ttc" id="apinout_8h_html_ad3ebeb23ad60165264117c8103271e91a1abe8e017ead2df3bf6976ab2f9d1a48"><div class="ttname"><a href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91a1abe8e017ead2df3bf6976ab2f9d1a48">RFM95_CS</a></div><div class="ttdeci">@ RFM95_CS</div><div class="ttdoc">SPI chip select used for LoRa. Output, Active-low.</div><div class="ttdef"><b>Definition:</b> <a href="pinout_8h_source.html#l00028">pinout.h:28</a></div></div>
-<div class="ttc" id="alora_8h_html_aa6cecb8c404241c624e83aee8a3979d2"><div class="ttname"><a href="lora_8h.html#aa6cecb8c404241c624e83aee8a3979d2">SERVER_ADDRESS</a></div><div class="ttdeci">#define SERVER_ADDRESS</div><div class="ttdoc">The LoRa address of the base station.</div><div class="ttdef"><b>Definition:</b> <a href="lora_8h_source.html#l00007">lora.h:7</a></div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>

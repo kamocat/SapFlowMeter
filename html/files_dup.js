@@ -1,7 +1,5 @@
 var files_dup =
 [
-    [ "debug.cpp", "debug_8cpp.html", "debug_8cpp" ],
-    [ "debug.h", "debug_8h.html", "debug_8h" ],
     [ "lora.cpp", "lora_8cpp.html", "lora_8cpp" ],
     [ "lora.h", "lora_8h.html", "lora_8h" ],
     [ "measure.cpp", "measure_8cpp.html", "measure_8cpp" ],
