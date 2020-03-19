@@ -83,25 +83,37 @@ $(document).ready(function(){initNavTree('sapflow__protothread_8ino.html',''); i
 
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">sapflow_protothread.ino File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="pinout_8h_source.html">pinout.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="schedule_8h_source.html">schedule.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="measure_8h_source.html">measure.h</a>&quot;</code><br />
-</div>
-<p><a href="sapflow__protothread_8ino_source.html">Go to the source code of this file.</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &quot;<a class="el" href="pinout_8h.html">pinout.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="sleep_8h.html">sleep.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="measure_8h.html">measure.h</a>&quot;</code><br />
+</div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a4fc01d736fe50cf5b977f755b675f11d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sapflow__protothread_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">setup</a> ()</td></tr>
 <tr class="memdesc:a4fc01d736fe50cf5b977f755b675f11d"><td class="mdescLeft">&#160;</td><td class="mdescRight">One-time initialization.  <a href="sapflow__protothread_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">More...</a><br /></td></tr>
 <tr class="separator:a4fc01d736fe50cf5b977f755b675f11d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a82ddb80712aeeda2b127a0a99765afd9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sapflow__protothread_8ino.html#a82ddb80712aeeda2b127a0a99765afd9">schedule</a> (struct pt *pt)</td></tr>
+<tr class="memdesc:a82ddb80712aeeda2b127a0a99765afd9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Controls the schedule of heating and sleeping.  <a href="sapflow__protothread_8ino.html#a82ddb80712aeeda2b127a0a99765afd9">More...</a><br /></td></tr>
+<tr class="separator:a82ddb80712aeeda2b127a0a99765afd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afe461d27b9c48d5921c00d521181f12f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sapflow__protothread_8ino.html#afe461d27b9c48d5921c00d521181f12f">loop</a> ()</td></tr>
 <tr class="memdesc:afe461d27b9c48d5921c00d521181f12f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implicit loop.  <a href="sapflow__protothread_8ino.html#afe461d27b9c48d5921c00d521181f12f">More...</a><br /></td></tr>
 <tr class="separator:afe461d27b9c48d5921c00d521181f12f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:ab3828482f445c1d02c16d4cdb97b31c2"><td class="memItemLeft" align="right" valign="top"><a id="ab3828482f445c1d02c16d4cdb97b31c2"></a>
+struct <a class="el" href="structmeasure__stack.html">measure_stack</a> m1&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sapflow__protothread_8ino.html#ab3828482f445c1d02c16d4cdb97b31c2">m2</a></td></tr>
+<tr class="memdesc:ab3828482f445c1d02c16d4cdb97b31c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Persistent variables for measurement. <br /></td></tr>
+<tr class="separator:ab3828482f445c1d02c16d4cdb97b31c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94e3f812619a921941215db6a12bc4ca"><td class="memItemLeft" align="right" valign="top">struct pt schedule_thd measure2_thd baseline2_thd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="sapflow__protothread_8ino.html#a94e3f812619a921941215db6a12bc4ca">delta2_thd</a></td></tr>
+<tr class="memdesc:a94e3f812619a921941215db6a12bc4ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">&lt; Control structure for <a class="el" href="sapflow__protothread_8ino.html#a82ddb80712aeeda2b127a0a99765afd9" title="Controls the schedule of heating and sleeping.">schedule()</a> thread  <a href="sapflow__protothread_8ino.html#a94e3f812619a921941215db6a12bc4ca">More...</a><br /></td></tr>
+<tr class="separator:a94e3f812619a921941215db6a12bc4ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="afe461d27b9c48d5921c00d521181f12f"></a>
@@ -122,9 +134,46 @@ Functions</h2></td></tr>
 <p>Implicit loop. </p>
 <p>This function is called inside a hidden loop in the Arduino framework. We're using it for protothread scheduling. All the real work happens inside the protothreads. </p>
 
-<p class="definition">Definition at line <a class="el" href="sapflow__protothread_8ino_source.html#l00047">47</a> of file <a class="el" href="sapflow__protothread_8ino_source.html">sapflow_protothread.ino</a>.</p>
+<p class="reference">References <a class="el" href="sapflow__protothread_8ino.html#ab3828482f445c1d02c16d4cdb97b31c2">m2</a>, <a class="el" href="measure_8cpp.html#ab83c2d058404e1bd3090b6ed34391610">measure()</a>, and <a class="el" href="sapflow__protothread_8ino.html#a82ddb80712aeeda2b127a0a99765afd9">schedule()</a>.</p>
 
-<p class="reference">References <a class="el" href="measure_8cpp_source.html#l00022">measure()</a>, <a class="el" href="measure_8cpp_source.html#l00008">sample_timer()</a>, and <a class="el" href="schedule_8cpp_source.html#l00080">schedule()</a>.</p>
+</div>
+</div>
+<a id="a82ddb80712aeeda2b127a0a99765afd9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a82ddb80712aeeda2b127a0a99765afd9">&#9670;&nbsp;</a></span>schedule()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int schedule </td>
+          <td>(</td>
+          <td class="paramtype">struct pt *&#160;</td>
+          <td class="paramname"><em>pt</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Controls the schedule of heating and sleeping. </p>
+<p>It waits on each instance of <a class="el" href="measure_8cpp.html#a66046993bf01557ea79bee842430550f" title="Calculates baseline temperature.">baseline()</a> and <a class="el" href="measure_8cpp.html#af0caa1792424edaef977b76536256e64" title="Calculates temperature delta and sapflow.">delta()</a>, ensuring they each complete before continuing to the next stage. This function is in the main .ino because you will need to modify it when adding additional probes.</p>
+<p>This is the schedule:</p><ol type="1">
+<li>Measure temperature of tree (before heat is applied)</li>
+<li>Apply heat pulse</li>
+<li>Wait for the peak of the heat to reach the upper and lower probes.</li>
+<li>Measure the sap flow</li>
+<li>Sleep until next measurement cycle <dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pt</td><td>A pointer to the protothread control structure. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the status of the protothread (Waiting, yeilded, exited, or ended) </dd></dl>
+</li>
+</ol>
+
+<p class="reference">References <a class="el" href="measure_8cpp.html#a66046993bf01557ea79bee842430550f">baseline()</a>, <a class="el" href="measure_8cpp.html#af0caa1792424edaef977b76536256e64">delta()</a>, <a class="el" href="sapflow__protothread_8ino.html#a94e3f812619a921941215db6a12bc4ca">delta2_thd</a>, <a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91af3773dd27ad729bada6d3379c3f44637">HEATER</a>, <a class="el" href="sapflow__protothread_8ino.html#ab3828482f445c1d02c16d4cdb97b31c2">m2</a>, <a class="el" href="sleep_8h.html#a4c06781bd70442b43eec7c92d3e7ea3a">rtc_ds</a>, and <a class="el" href="sleep_8cpp.html#a81c090a1b26fdf0e250c5f249ce28ea3">sleep_cycle()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="sapflow__protothread_8ino.html#afe461d27b9c48d5921c00d521181f12f">loop()</a>.</p>
 
 </div>
 </div>
@@ -146,9 +195,27 @@ Functions</h2></td></tr>
 <p>One-time initialization. </p>
 <p>This function is called when the microcontroller first starts up or is reset. It's good for things that should only happen once. You do not need to call it yourself. It initializes some hardware, puts the protothreads in a known state, and begins the measurement cycle (which starts with sleep) </p>
 
-<p class="definition">Definition at line <a class="el" href="sapflow__protothread_8ino_source.html#l00012">12</a> of file <a class="el" href="sapflow__protothread_8ino_source.html">sapflow_protothread.ino</a>.</p>
+<p class="reference">References <a class="el" href="structmeasure__stack.html#a074aed546258cea964f8c52371627927">measure_stack::addr</a>, <a class="el" href="pinout_8cpp.html#a47191dfa6786da2498eb49ae28f8d361">hardware_init()</a>, <a class="el" href="sapflow__protothread_8ino.html#ab3828482f445c1d02c16d4cdb97b31c2">m2</a>, <a class="el" href="sleep_8h.html#a4c06781bd70442b43eec7c92d3e7ea3a">rtc_ds</a>, and <a class="el" href="structmeasure__stack.html#a1149f3bba0c73e70f598a69802dce018">measure_stack::treeID</a>.</p>
 
-<p class="reference">References <a class="el" href="measure_8h_source.html#l00030">baseline_thd</a>, <a class="el" href="measure_8h_source.html#l00031">delta_thd</a>, <a class="el" href="pinout_8h_source.html#l00012">EN_3v3</a>, <a class="el" href="pinout_8h_source.html#l00013">EN_5v</a>, <a class="el" href="pinout_8h_source.html#l00015">HEATER</a>, <a class="el" href="pinout_8h_source.html#l00019">I2C_SCL</a>, <a class="el" href="pinout_8h_source.html#l00018">I2C_SDA</a>, <a class="el" href="measure_8h_source.html#l00028">measure_thd</a>, <a class="el" href="pinout_8h_source.html#l00028">RFM95_CS</a>, <a class="el" href="measure_8h_source.html#l00029">sample_timer_thd</a>, <a class="el" href="schedule_8h_source.html#l00008">sched_thd</a>, <a class="el" href="sd__log_8h_source.html#l00014">sd</a>, <a class="el" href="pinout_8h_source.html#l00014">SD_CS</a>, <a class="el" href="schedule_8h_source.html#l00012">sleep</a>, <a class="el" href="pinout_8h_source.html#l00021">SPI_MOSI</a>, <a class="el" href="pinout_8h_source.html#l00020">SPI_SCK</a>, and <a class="el" href="pinout_8h_source.html#l00017">STATUS_LED</a>.</p>
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="a94e3f812619a921941215db6a12bc4ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a94e3f812619a921941215db6a12bc4ca">&#9670;&nbsp;</a></span>delta2_thd</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct pt schedule_thd measure2_thd baseline2_thd delta2_thd</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>&lt; Control structure for <a class="el" href="sapflow__protothread_8ino.html#a82ddb80712aeeda2b127a0a99765afd9" title="Controls the schedule of heating and sleeping.">schedule()</a> thread </p>
+<p>&lt; Control structure for <a class="el" href="measure_8cpp.html#ab83c2d058404e1bd3090b6ed34391610" title="Captures a measurement from the three probes.">measure()</a> thread &lt; Control structure for <a class="el" href="measure_8cpp.html#a66046993bf01557ea79bee842430550f" title="Calculates baseline temperature.">baseline()</a> thread Control structure for <a class="el" href="measure_8cpp.html#af0caa1792424edaef977b76536256e64" title="Calculates temperature delta and sapflow.">delta()</a> thread </p>
+
+<p class="reference">Referenced by <a class="el" href="sapflow__protothread_8ino.html#a82ddb80712aeeda2b127a0a99765afd9">schedule()</a>.</p>
 
 </div>
 </div>

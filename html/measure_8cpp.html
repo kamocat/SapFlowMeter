@@ -83,41 +83,78 @@ $(document).ready(function(){initNavTree('measure_8cpp.html',''); initResizable(
 
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#enum-members">Enumerations</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">measure.cpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="measure_8h_source.html">measure.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="lora_8h_source.html">lora.h</a>&quot;</code><br />
-</div>
-<p><a href="measure_8cpp_source.html">Go to the source code of this file.</a></p>
-<table class="memberdecls">
+<div class="textblock"><code>#include &quot;<a class="el" href="measure_8h.html">measure.h</a>&quot;</code><br />
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:ab61b309c0ad8bee195720809f1eda2a4"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="measure_8cpp.html#ab61b309c0ad8bee195720809f1eda2a4">register_mask</a> { <br />
+&#160;&#160;<a class="el" href="measure_8cpp.html#ab61b309c0ad8bee195720809f1eda2a4a79574f1d0a2f78eff42042e34b72436d">RDY</a> =1&lt;&lt;7, 
+<a class="el" href="measure_8cpp.html#ab61b309c0ad8bee195720809f1eda2a4a7ce981d4064b1d59b854f0a859af4fff">CHAN</a> =3&lt;&lt;5, 
+<a class="el" href="measure_8cpp.html#ab61b309c0ad8bee195720809f1eda2a4aa5c511df5582eb12c3723cbf5ade7947">CON</a> =1&lt;&lt;4, 
+<a class="el" href="measure_8cpp.html#ab61b309c0ad8bee195720809f1eda2a4a701561c0f5d37274ea26078e3e8c3737">DEPTH</a> =3&lt;&lt;2, 
+<br />
+&#160;&#160;<a class="el" href="measure_8cpp.html#ab61b309c0ad8bee195720809f1eda2a4a4739efd44585e9126911909d9331b16f">PGA</a> =3&lt;&lt;0
+<br />
+ }</td></tr>
+<tr class="memdesc:ab61b309c0ad8bee195720809f1eda2a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bitmasks for the MCP3424 status/control register.  <a href="measure_8cpp.html#ab61b309c0ad8bee195720809f1eda2a4">More...</a><br /></td></tr>
+<tr class="separator:ab61b309c0ad8bee195720809f1eda2a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a4077648d56901b090710a429b69fe19d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="measure_8cpp.html#a4077648d56901b090710a429b69fe19d">sample_timer</a> (struct pt *pt)</td></tr>
-<tr class="memdesc:a4077648d56901b090710a429b69fe19d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Controls timing of the measurements.  <a href="measure_8cpp.html#a4077648d56901b090710a429b69fe19d">More...</a><br /></td></tr>
-<tr class="separator:a4077648d56901b090710a429b69fe19d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a657b44bae6694e6e2c5477f4f2ab85a1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="measure_8cpp.html#a657b44bae6694e6e2c5477f4f2ab85a1">measure</a> (struct pt *pt)</td></tr>
-<tr class="memdesc:a657b44bae6694e6e2c5477f4f2ab85a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Captures a measurement from the three probes.  <a href="measure_8cpp.html#a657b44bae6694e6e2c5477f4f2ab85a1">More...</a><br /></td></tr>
-<tr class="separator:a657b44bae6694e6e2c5477f4f2ab85a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a31cf8d05fcffa8f51508a9c3db637413"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="measure_8cpp.html#a31cf8d05fcffa8f51508a9c3db637413">baseline</a> (struct pt *pt)</td></tr>
-<tr class="memdesc:a31cf8d05fcffa8f51508a9c3db637413"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates baseline temperature.  <a href="measure_8cpp.html#a31cf8d05fcffa8f51508a9c3db637413">More...</a><br /></td></tr>
-<tr class="separator:a31cf8d05fcffa8f51508a9c3db637413"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa831fa3620094ac2be9c85d34a89051e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="measure_8cpp.html#aa831fa3620094ac2be9c85d34a89051e">delta</a> (struct pt *pt)</td></tr>
-<tr class="memdesc:aa831fa3620094ac2be9c85d34a89051e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates temperature delta and sapflow.  <a href="measure_8cpp.html#aa831fa3620094ac2be9c85d34a89051e">More...</a><br /></td></tr>
-<tr class="separator:aa831fa3620094ac2be9c85d34a89051e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:ae5efd21d6417fda5e3f0cfccf1d1301b"><td class="memItemLeft" align="right" valign="top"><a id="ae5efd21d6417fda5e3f0cfccf1d1301b"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>maxtemp</b></td></tr>
-<tr class="separator:ae5efd21d6417fda5e3f0cfccf1d1301b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab83c2d058404e1bd3090b6ed34391610"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="measure_8cpp.html#ab83c2d058404e1bd3090b6ed34391610">measure</a> (struct pt *pt, struct <a class="el" href="structmeasure__stack.html">measure_stack</a> &amp;m)</td></tr>
+<tr class="memdesc:ab83c2d058404e1bd3090b6ed34391610"><td class="mdescLeft">&#160;</td><td class="mdescRight">Captures a measurement from the three probes.  <a href="measure_8cpp.html#ab83c2d058404e1bd3090b6ed34391610">More...</a><br /></td></tr>
+<tr class="separator:ab83c2d058404e1bd3090b6ed34391610"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66046993bf01557ea79bee842430550f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="measure_8cpp.html#a66046993bf01557ea79bee842430550f">baseline</a> (struct pt *pt, struct <a class="el" href="structmeasure__stack.html">measure_stack</a> &amp;m, char &amp;rdv)</td></tr>
+<tr class="memdesc:a66046993bf01557ea79bee842430550f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates baseline temperature.  <a href="measure_8cpp.html#a66046993bf01557ea79bee842430550f">More...</a><br /></td></tr>
+<tr class="separator:a66046993bf01557ea79bee842430550f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0caa1792424edaef977b76536256e64"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="measure_8cpp.html#af0caa1792424edaef977b76536256e64">delta</a> (struct pt *pt, struct <a class="el" href="structmeasure__stack.html">measure_stack</a> &amp;m, char &amp;rdv)</td></tr>
+<tr class="memdesc:af0caa1792424edaef977b76536256e64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates temperature delta and sapflow.  <a href="measure_8cpp.html#af0caa1792424edaef977b76536256e64">More...</a><br /></td></tr>
+<tr class="separator:af0caa1792424edaef977b76536256e64"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2aebf20b995562b77d4f1bfc0b5a22e"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="measure_8cpp.html#ae2aebf20b995562b77d4f1bfc0b5a22e">rtd_calc</a> (int32_t raw)</td></tr>
+<tr class="memdesc:ae2aebf20b995562b77d4f1bfc0b5a22e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts raw measurement into degrees Celcius.  <a href="measure_8cpp.html#ae2aebf20b995562b77d4f1bfc0b5a22e">More...</a><br /></td></tr>
+<tr class="separator:ae2aebf20b995562b77d4f1bfc0b5a22e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9374d0e9de0342826ddd72d5db95800"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="measure_8cpp.html#ad9374d0e9de0342826ddd72d5db95800">mcp3424_measure</a> (struct pt *pt, uint8_t addr, uint8_t ch, int32_t &amp;result)</td></tr>
+<tr class="memdesc:ad9374d0e9de0342826ddd72d5db95800"><td class="mdescLeft">&#160;</td><td class="mdescRight">Measures the value of a single ADC channel.  <a href="measure_8cpp.html#ad9374d0e9de0342826ddd72d5db95800">More...</a><br /></td></tr>
+<tr class="separator:ad9374d0e9de0342826ddd72d5db95800"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="ab61b309c0ad8bee195720809f1eda2a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab61b309c0ad8bee195720809f1eda2a4">&#9670;&nbsp;</a></span>register_mask</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="measure_8cpp.html#ab61b309c0ad8bee195720809f1eda2a4">register_mask</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Bitmasks for the MCP3424 status/control register. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ab61b309c0ad8bee195720809f1eda2a4a79574f1d0a2f78eff42042e34b72436d"></a>RDY&#160;</td><td class="fielddoc"><p>result ready </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab61b309c0ad8bee195720809f1eda2a4a7ce981d4064b1d59b854f0a859af4fff"></a>CHAN&#160;</td><td class="fielddoc"><p>Channel 0-3. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab61b309c0ad8bee195720809f1eda2a4aa5c511df5582eb12c3723cbf5ade7947"></a>CON&#160;</td><td class="fielddoc"><p>Continuous/One-Shot. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab61b309c0ad8bee195720809f1eda2a4a701561c0f5d37274ea26078e3e8c3737"></a>DEPTH&#160;</td><td class="fielddoc"><p>Bit depth 12-18. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ab61b309c0ad8bee195720809f1eda2a4a4739efd44585e9126911909d9331b16f"></a>PGA&#160;</td><td class="fielddoc"><p>Gain of 1-8. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a31cf8d05fcffa8f51508a9c3db637413"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a31cf8d05fcffa8f51508a9c3db637413">&#9670;&nbsp;</a></span>baseline()</h2>
+<a id="a66046993bf01557ea79bee842430550f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a66046993bf01557ea79bee842430550f">&#9670;&nbsp;</a></span>baseline()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -126,8 +163,24 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>maxtemp</b></td></tr
           <td class="memname">int baseline </td>
           <td>(</td>
           <td class="paramtype">struct pt *&#160;</td>
-          <td class="paramname"><em>pt</em> = <code>&amp;<a class="el" href="measure_8h.html#a75797b818bbb902f6d65e98df6ed77f1">baseline_thd</a></code></td><td>)</td>
+          <td class="paramname"><em>pt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">struct <a class="el" href="structmeasure__stack.html">measure_stack</a> &amp;&#160;</td>
+          <td class="paramname"><em>m</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char &amp;&#160;</td>
+          <td class="paramname"><em>rdv</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -136,22 +189,22 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>maxtemp</b></td></tr
 <p>This is a protothread that averages 10 samples of data to determine the "initial" or "baseline" temperature of the tree. It should be used before the heater is turned on.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">pt</td><td>A pointer to the protothread control structure. The default parameter is correct. Don't forget to initialize the control structure in <a class="el" href="sapflow__protothread_8ino.html#a4fc01d736fe50cf5b977f755b675f11d" title="One-time initialization.">setup()</a>. </td></tr>
+    <tr><td class="paramname">pt</td><td>A pointer to the protothread control structure. Don't forget to initialize the control structure in <a class="el" href="sapflow__protothread_8ino.html#a4fc01d736fe50cf5b977f755b675f11d" title="One-time initialization.">setup()</a>. </td></tr>
+    <tr><td class="paramname">m</td><td>Persistent storage for this thread, like a private stack. </td></tr>
+    <tr><td class="paramname">rdv</td><td>Rendezvous to ensure all <a class="el" href="measure_8h.html#a66046993bf01557ea79bee842430550f" title="Calculates baseline temperature.">baseline()</a> instances stop at the same point </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the status of the protothread (Waiting, yeilded, exited, or ended) </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="measure_8cpp_source.html#l00065">65</a> of file <a class="el" href="measure_8cpp_source.html">measure.cpp</a>.</p>
+<p class="reference">References <a class="el" href="sd__log_8h.html#ab9da93331bae3f5268bcaf01ab44d31d">cout()</a>, <a class="el" href="structmeasure__stack.html#aae1622c3c4c9d395580a1cd9447befc0">measure_stack::i</a>, <a class="el" href="structmeasure__stack.html#a8ba5e26b8e82f3d6314f94a9ecbeae10">measure_stack::latest</a>, <a class="el" href="structtemperature.html#a3f0dd1723441a9f6a97cffe9cee6ee20">temperature::lower</a>, <a class="el" href="structmeasure__stack.html#a835b82414ba309157fa3577e9fa3d6c7">measure_stack::maxtemp</a>, <a class="el" href="structmeasure__stack.html#aef5adee960401c8e2c01d2bb704c5384">measure_stack::reference</a>, <a class="el" href="structmeasure__stack.html#abb8f94565f7400d9e0cd84a217f9d47b">measure_stack::sem</a>, <a class="el" href="structmeasure__stack.html#a1149f3bba0c73e70f598a69802dce018">measure_stack::treeID</a>, and <a class="el" href="structtemperature.html#ace7c3f7d6e6aa764dd091bb93a6493f3">temperature::upper</a>.</p>
 
-<p class="reference">References <a class="el" href="measure_8h_source.html#l00021">temperature::lower</a>, <a class="el" href="measure_8h_source.html#l00026">reference</a>, and <a class="el" href="measure_8h_source.html#l00020">temperature::upper</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="schedule_8cpp_source.html#l00080">schedule()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="sapflow__protothread_8ino.html#a82ddb80712aeeda2b127a0a99765afd9">schedule()</a>.</p>
 
 </div>
 </div>
-<a id="aa831fa3620094ac2be9c85d34a89051e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa831fa3620094ac2be9c85d34a89051e">&#9670;&nbsp;</a></span>delta()</h2>
+<a id="af0caa1792424edaef977b76536256e64"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af0caa1792424edaef977b76536256e64">&#9670;&nbsp;</a></span>delta()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -160,8 +213,24 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>maxtemp</b></td></tr
           <td class="memname">int delta </td>
           <td>(</td>
           <td class="paramtype">struct pt *&#160;</td>
-          <td class="paramname"><em>pt</em> = <code>&amp;<a class="el" href="measure_8h.html#a8ff6579d0f5410dbe20162392e32d3a4">delta_thd</a></code></td><td>)</td>
+          <td class="paramname"><em>pt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">struct <a class="el" href="structmeasure__stack.html">measure_stack</a> &amp;&#160;</td>
+          <td class="paramname"><em>m</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char &amp;&#160;</td>
+          <td class="paramname"><em>rdv</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -170,7 +239,9 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>maxtemp</b></td></tr
 <p>This is a protothread that calculates the sap flow by averaging measurements over 40 seconds. It also calls other functions to get the weight, package the data, log to an SD card, and send the information over LoRa.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">pt</td><td>A pointer to the protothread control structure. The default parameter is correct. Don't forget to initialize the control structure in <a class="el" href="sapflow__protothread_8ino.html#a4fc01d736fe50cf5b977f755b675f11d" title="One-time initialization.">setup()</a>. </td></tr>
+    <tr><td class="paramname">pt</td><td>A pointer to the protothread control structure. </td></tr>
+    <tr><td class="paramname">m</td><td>Persistent storage for this thread, like a private stack. </td></tr>
+    <tr><td class="paramname">rdv</td><td>Rendezvous to ensure all <a class="el" href="measure_8h.html#af0caa1792424edaef977b76536256e64" title="Calculates temperature delta and sapflow.">delta()</a> instances stop at the same point </td></tr>
   </table>
   </dd>
 </dl>
@@ -185,16 +256,70 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>maxtemp</b></td></tr
 </ul>
 <p>In order to get a smoother result, we are takng the average of this calculation over a period of 40 seconds. Burges et. al. (2001) suggests that this value should converge.</p>
 
-<p class="definition">Definition at line <a class="el" href="measure_8cpp_source.html#l00091">91</a> of file <a class="el" href="measure_8cpp_source.html">measure.cpp</a>.</p>
+<p class="reference">References <a class="el" href="sd__log_8h.html#ab9da93331bae3f5268bcaf01ab44d31d">cout()</a>, <a class="el" href="structmeasure__stack.html#a5df8846e5c46c0a07b47addd4734728a">measure_stack::flow</a>, <a class="el" href="structmeasure__stack.html#aae1622c3c4c9d395580a1cd9447befc0">measure_stack::i</a>, <a class="el" href="sd__log_8cpp.html#a5fb8d1693bf7e61f8fa44b6ee064d7d2">int2str()</a>, <a class="el" href="structmeasure__stack.html#a8ba5e26b8e82f3d6314f94a9ecbeae10">measure_stack::latest</a>, <a class="el" href="structtemperature.html#a3f0dd1723441a9f6a97cffe9cee6ee20">temperature::lower</a>, <a class="el" href="structmeasure__stack.html#aef5adee960401c8e2c01d2bb704c5384">measure_stack::reference</a>, <a class="el" href="sleep_8h.html#a4c06781bd70442b43eec7c92d3e7ea3a">rtc_ds</a>, <a class="el" href="structmeasure__stack.html#abb8f94565f7400d9e0cd84a217f9d47b">measure_stack::sem</a>, <a class="el" href="structmeasure__stack.html#a1149f3bba0c73e70f598a69802dce018">measure_stack::treeID</a>, and <a class="el" href="structtemperature.html#ace7c3f7d6e6aa764dd091bb93a6493f3">temperature::upper</a>.</p>
 
-<p class="reference">References <a class="el" href="lora_8cpp_source.html#l00058">build_msg()</a>, <a class="el" href="sd__log_8h.html#ab9da93331bae3f5268bcaf01ab44d31d">cout()</a>, <a class="el" href="measure_8h_source.html#l00025">latest</a>, <a class="el" href="lora_8cpp_source.html#l00017">lora_init()</a>, <a class="el" href="measure_8h_source.html#l00021">temperature::lower</a>, <a class="el" href="measure_8h_source.html#l00026">reference</a>, <a class="el" href="schedule_8h_source.html#l00010">rtc_ds</a>, <a class="el" href="measure_8h_source.html#l00009">sample_trigger</a>, and <a class="el" href="measure_8h_source.html#l00020">temperature::upper</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="schedule_8cpp_source.html#l00080">schedule()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="sapflow__protothread_8ino.html#a82ddb80712aeeda2b127a0a99765afd9">schedule()</a>.</p>
 
 </div>
 </div>
-<a id="a657b44bae6694e6e2c5477f4f2ab85a1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a657b44bae6694e6e2c5477f4f2ab85a1">&#9670;&nbsp;</a></span>measure()</h2>
+<a id="ad9374d0e9de0342826ddd72d5db95800"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad9374d0e9de0342826ddd72d5db95800">&#9670;&nbsp;</a></span>mcp3424_measure()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int mcp3424_measure </td>
+          <td>(</td>
+          <td class="paramtype">struct pt *&#160;</td>
+          <td class="paramname"><em>pt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>addr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>channel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int32_t &amp;&#160;</td>
+          <td class="paramname"><em>result</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Measures the value of a single ADC channel. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pt</td><td>A pointer to the protothread control structure </td></tr>
+    <tr><td class="paramname">addr</td><td>The 7-bit I2C address of the ADC. If you choose, you can enter only the last three bits (0-7). </td></tr>
+    <tr><td class="paramname">channel</td><td>The measurement channel. Valid inputs are 1-4. </td></tr>
+    <tr><td class="paramname">result</td><td>The raw 18-bit signed ADC value. Result is bit-extended to 32 bits. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the status of the protothread (Waiting, yeilded, exited, or ended) </dd></dl>
+
+<p class="reference">References <a class="el" href="measure_8cpp.html#ab61b309c0ad8bee195720809f1eda2a4a7ce981d4064b1d59b854f0a859af4fff">CHAN</a>, <a class="el" href="measure_8cpp.html#ab61b309c0ad8bee195720809f1eda2a4a701561c0f5d37274ea26078e3e8c3737">DEPTH</a>, <a class="el" href="measure_8cpp.html#ab61b309c0ad8bee195720809f1eda2a4a4739efd44585e9126911909d9331b16f">PGA</a>, and <a class="el" href="measure_8cpp.html#ab61b309c0ad8bee195720809f1eda2a4a79574f1d0a2f78eff42042e34b72436d">RDY</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="measure_8h.html#ab83c2d058404e1bd3090b6ed34391610">measure()</a>.</p>
+
+</div>
+</div>
+<a id="ab83c2d058404e1bd3090b6ed34391610"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab83c2d058404e1bd3090b6ed34391610">&#9670;&nbsp;</a></span>measure()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -203,61 +328,65 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>maxtemp</b></td></tr
           <td class="memname">int measure </td>
           <td>(</td>
           <td class="paramtype">struct pt *&#160;</td>
-          <td class="paramname"><em>pt</em> = <code>&amp;<a class="el" href="measure_8h.html#ada9fca85b63952a68f6a2158e5f8a87b">measure_thd</a></code></td><td>)</td>
+          <td class="paramname"><em>pt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">struct <a class="el" href="structmeasure__stack.html">measure_stack</a> &amp;&#160;</td>
+          <td class="paramname"><em>m</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Captures a measurement from the three probes. </p>
-<p>This is a protothread that reads the temperature from three RTD amplifiers connected to the probes in the tree. It stores the result in the global variable "latest", and logs to the SD card.</p>
+<p>This is a protothread that reads the temperature from three RTD amplifiers connected to the probes in the tree. It stores the result in the struct paramter "latest" and logs to the SD card.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">pt</td><td>A pointer to the protothread control structure. The default parameter is correct. Don't forget to initialize the control structure in <a class="el" href="sapflow__protothread_8ino.html#a4fc01d736fe50cf5b977f755b675f11d" title="One-time initialization.">setup()</a>. </td></tr>
+    <tr><td class="paramname">m</td><td>Persistent storage for this thread, like a private stack. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the status of the protothread (Waiting, yeilded, exited, or ended) </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="measure_8cpp_source.html#l00022">22</a> of file <a class="el" href="measure_8cpp_source.html">measure.cpp</a>.</p>
+<p class="reference">References <a class="el" href="structmeasure__stack.html#a074aed546258cea964f8c52371627927">measure_stack::addr</a>, <a class="el" href="structmeasure__stack.html#a3ac77633b2dbc43ff68710cf2f0ab103">measure_stack::child</a>, <a class="el" href="sd__log_8h.html#ab9da93331bae3f5268bcaf01ab44d31d">cout()</a>, <a class="el" href="structtemperature.html#a4666a09deabc2ac0b380fb3b7b1ca856">temperature::heater</a>, <a class="el" href="sd__log_8cpp.html#a5fb8d1693bf7e61f8fa44b6ee064d7d2">int2str()</a>, <a class="el" href="structmeasure__stack.html#a8ba5e26b8e82f3d6314f94a9ecbeae10">measure_stack::latest</a>, <a class="el" href="structtemperature.html#a3f0dd1723441a9f6a97cffe9cee6ee20">temperature::lower</a>, <a class="el" href="structmeasure__stack.html#a835b82414ba309157fa3577e9fa3d6c7">measure_stack::maxtemp</a>, <a class="el" href="measure_8cpp.html#ad9374d0e9de0342826ddd72d5db95800">mcp3424_measure()</a>, <a class="el" href="structmeasure__stack.html#aa10f2d551f4ca3733510b11a2b6e334e">measure_stack::raw</a>, <a class="el" href="sleep_8h.html#a4c06781bd70442b43eec7c92d3e7ea3a">rtc_ds</a>, <a class="el" href="measure_8cpp.html#ae2aebf20b995562b77d4f1bfc0b5a22e">rtd_calc()</a>, <a class="el" href="structmeasure__stack.html#abb8f94565f7400d9e0cd84a217f9d47b">measure_stack::sem</a>, <a class="el" href="structmeasure__stack.html#a1149f3bba0c73e70f598a69802dce018">measure_stack::treeID</a>, and <a class="el" href="structtemperature.html#ace7c3f7d6e6aa764dd091bb93a6493f3">temperature::upper</a>.</p>
 
-<p class="reference">References <a class="el" href="measure_8h_source.html#l00022">temperature::heater</a>, <a class="el" href="pinout_8h_source.html#l00027">HEATER_CS</a>, <a class="el" href="measure_8h_source.html#l00025">latest</a>, <a class="el" href="measure_8h_source.html#l00021">temperature::lower</a>, <a class="el" href="pinout_8h_source.html#l00026">LOWER_CS</a>, <a class="el" href="measure_8h_source.html#l00011">Rnom</a>, <a class="el" href="measure_8h_source.html#l00012">Rref</a>, <a class="el" href="measure_8h_source.html#l00009">sample_trigger</a>, <a class="el" href="measure_8h_source.html#l00020">temperature::upper</a>, and <a class="el" href="pinout_8h_source.html#l00025">UPPER_CS</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="sapflow__protothread_8ino_source.html#l00047">loop()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="sapflow__protothread_8ino.html#afe461d27b9c48d5921c00d521181f12f">loop()</a>.</p>
 
 </div>
 </div>
-<a id="a4077648d56901b090710a429b69fe19d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4077648d56901b090710a429b69fe19d">&#9670;&nbsp;</a></span>sample_timer()</h2>
+<a id="ae2aebf20b995562b77d4f1bfc0b5a22e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2aebf20b995562b77d4f1bfc0b5a22e">&#9670;&nbsp;</a></span>rtd_calc()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int sample_timer </td>
+          <td class="memname">double rtd_calc </td>
           <td>(</td>
-          <td class="paramtype">struct pt *&#160;</td>
-          <td class="paramname"><em>pt</em> = <code>&amp;<a class="el" href="measure_8h.html#ac1b4a8786e0684b0f63f527522e11e5e">sample_timer_thd</a></code></td><td>)</td>
+          <td class="paramtype">int32_t&#160;</td>
+          <td class="paramname"><em>raw</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Controls timing of the measurements. </p>
-<p>This is a protothread that creates a pulse every second on the global variable sample_trigger in order to sychronize sample-based processing. Protothreads that sample or process sampled data can latch this signal using PT_WAIT_UNTIL(pt, sample_trigger); PT_WAIT_WHILE(pt, sample_trigger); to synchronize execution without impacting the sample frequency.</p>
+<p>Converts raw measurement into degrees Celcius. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">pt</td><td>A pointer to the protothread control structure. The default parameter is correct. Don't forget to initialize the control structure in <a class="el" href="sapflow__protothread_8ino.html#a4fc01d736fe50cf5b977f755b675f11d" title="One-time initialization.">setup()</a>. </td></tr>
+    <tr><td class="paramname">raw</td><td>The value measured by the ADC </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the status of the protothread (Waiting, yeilded, exited, or ended) </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>temperature in Celcius </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="measure_8cpp_source.html#l00008">8</a> of file <a class="el" href="measure_8cpp_source.html">measure.cpp</a>.</p>
-
-<p class="reference">References <a class="el" href="measure_8h_source.html#l00009">sample_trigger</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="sapflow__protothread_8ino_source.html#l00047">loop()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="measure_8h.html#ab83c2d058404e1bd3090b6ed34391610">measure()</a>.</p>
 
 </div>
 </div>

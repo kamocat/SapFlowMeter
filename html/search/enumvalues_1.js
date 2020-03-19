@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['en_5f3v3_115',['EN_3v3',['../pinout_8h.html#ad3ebeb23ad60165264117c8103271e91a3d04cbc9f242fee78fec8a441f5adc48',1,'pinout.h']]],
-  ['en_5f5v_116',['EN_5v',['../pinout_8h.html#ad3ebeb23ad60165264117c8103271e91af834c805dbb05ca3652f5ebb4fa45ef7',1,'pinout.h']]]
+  ['chan_127',['CHAN',['../measure_8cpp.html#ab61b309c0ad8bee195720809f1eda2a4a7ce981d4064b1d59b854f0a859af4fff',1,'measure.cpp']]],
+  ['con_128',['CON',['../measure_8cpp.html#ab61b309c0ad8bee195720809f1eda2a4aa5c511df5582eb12c3723cbf5ade7947',1,'measure.cpp']]]
 ];

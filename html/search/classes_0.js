@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['temperature_69',['temperature',['../structtemperature.html',1,'']]]
+  ['measure_5fstack_75',['measure_stack',['../structmeasure__stack.html',1,'']]]
 ];

@@ -84,23 +84,22 @@ $(document).ready(function(){initNavTree('pinout_8h.html',''); initResizable(); 
 <div class="header">
   <div class="summary">
 <a href="#define-members">Macros</a> &#124;
-<a href="#enum-members">Enumerations</a>  </div>
+<a href="#enum-members">Enumerations</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">pinout.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;pt.h&gt;</code><br />
 <code>#include &lt;FeatherFault.h&gt;</code><br />
-</div>
-<p><a href="pinout_8h_source.html">Go to the source code of this file.</a></p>
-<table class="memberdecls">
+</div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
 <tr class="memitem:ad3ebeb23ad60165264117c8103271e91"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91">pinout</a> { <br />
 &#160;&#160;<a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91a3d04cbc9f242fee78fec8a441f5adc48">EN_3v3</a> = 5, 
 <a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91af834c805dbb05ca3652f5ebb4fa45ef7">EN_5v</a> = 6, 
 <a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91ae70571bf8829bf9dda22fd0633b5c990">SD_CS</a> = 10, 
-<a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91af3773dd27ad729bada6d3379c3f44637">HEATER</a> = 11, 
+<a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91af3773dd27ad729bada6d3379c3f44637">HEATER</a> = 17, 
 <br />
 &#160;&#160;<a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91abafb92f043476d32ae952ed21d0a76f1">ALARM_PIN</a> = 12, 
 <a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91a02568e07bfeeba217f0267cc19b92876">STATUS_LED</a> = 13, 
@@ -113,17 +112,22 @@ Enumerations</h2></td></tr>
 <a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91a951f819598b53b2729ee0e4c05e6888e">TX</a> = 1, 
 <br />
 &#160;&#160;<a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91a4aca20d6e60fffb66e9668b3a6592531">RX</a> = 0, 
-<a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91aa58b078247ffcf6ff61798989435ad45">UPPER_CS</a> = 19, 
-<a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91a69589f542cdf78712c60ec36d147a0c2">LOWER_CS</a> = 18, 
-<a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91a732fb526fc16be2e7fac935816f8f752">HEATER_CS</a> = 17, 
-<br />
-&#160;&#160;<a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91a1abe8e017ead2df3bf6976ab2f9d1a48">RFM95_CS</a> = 8, 
+<a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91a1abe8e017ead2df3bf6976ab2f9d1a48">RFM95_CS</a> = 8, 
 <a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91a9cd34561d6acfeed85d0245d83752c82">RFM95_RST</a> = 4, 
 <a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91a4b48a2ee794cf813ea6cac59ec5183bf">RFM95_INT</a> = 3
 <br />
  }</td></tr>
 <tr class="memdesc:ad3ebeb23ad60165264117c8103271e91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pin definitions for our project.  <a href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91">More...</a><br /></td></tr>
 <tr class="separator:ad3ebeb23ad60165264117c8103271e91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a47191dfa6786da2498eb49ae28f8d361"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pinout_8h.html#a47191dfa6786da2498eb49ae28f8d361">hardware_init</a> (void)</td></tr>
+<tr class="memdesc:a47191dfa6786da2498eb49ae28f8d361"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the hardware.  <a href="pinout_8h.html#a47191dfa6786da2498eb49ae28f8d361">More...</a><br /></td></tr>
+<tr class="separator:a47191dfa6786da2498eb49ae28f8d361"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7c1e10b64821f080b5a6ad424775ce3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pinout_8h.html#aa7c1e10b64821f080b5a6ad424775ce3">hardware_deinit</a> (void)</td></tr>
+<tr class="memdesc:aa7c1e10b64821f080b5a6ad424775ce3"><td class="mdescLeft">&#160;</td><td class="mdescRight">De-initializes hardware.  <a href="pinout_8h.html#aa7c1e10b64821f080b5a6ad424775ce3">More...</a><br /></td></tr>
+<tr class="separator:aa7c1e10b64821f080b5a6ad424775ce3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
 <a id="ad3ebeb23ad60165264117c8103271e91"></a>
@@ -167,12 +171,6 @@ Enumerations</h2></td></tr>
 </td></tr>
 <tr><td class="fieldname"><a id="ad3ebeb23ad60165264117c8103271e91a4aca20d6e60fffb66e9668b3a6592531"></a>RX&#160;</td><td class="fielddoc"><p>Serial1 receive, used for RS232. Input. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ad3ebeb23ad60165264117c8103271e91aa58b078247ffcf6ff61798989435ad45"></a>UPPER_CS&#160;</td><td class="fielddoc"><p>Upper RTD amplifier chip select. Output. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="ad3ebeb23ad60165264117c8103271e91a69589f542cdf78712c60ec36d147a0c2"></a>LOWER_CS&#160;</td><td class="fielddoc"><p>Lower RTD amplifier chip select. Output. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="ad3ebeb23ad60165264117c8103271e91a732fb526fc16be2e7fac935816f8f752"></a>HEATER_CS&#160;</td><td class="fielddoc"><p>Heater RTD amplifier chip select. Output. </p>
-</td></tr>
 <tr><td class="fieldname"><a id="ad3ebeb23ad60165264117c8103271e91a1abe8e017ead2df3bf6976ab2f9d1a48"></a>RFM95_CS&#160;</td><td class="fielddoc"><p>SPI chip select used for LoRa. Output, Active-low. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="ad3ebeb23ad60165264117c8103271e91a9cd34561d6acfeed85d0245d83752c82"></a>RFM95_RST&#160;</td><td class="fielddoc"><p>Reset pin used for LoRa. Output. Active-low? </p>
@@ -181,7 +179,56 @@ Enumerations</h2></td></tr>
 </td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="pinout_8h_source.html#l00011">11</a> of file <a class="el" href="pinout_8h_source.html">pinout.h</a>.</p>
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="aa7c1e10b64821f080b5a6ad424775ce3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7c1e10b64821f080b5a6ad424775ce3">&#9670;&nbsp;</a></span>hardware_deinit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void hardware_deinit </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>De-initializes hardware. </p>
+<p>Used before sleeping to save power </p>
+
+<p class="reference">References <a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91a3d04cbc9f242fee78fec8a441f5adc48">EN_3v3</a>, <a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91af834c805dbb05ca3652f5ebb4fa45ef7">EN_5v</a>, <a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91ae70571bf8829bf9dda22fd0633b5c990">SD_CS</a>, <a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91add37bcc343ce0aead026109fc50b2cac">SPI_MOSI</a>, <a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91a0fe4e8dd583eaf1ca7aeb51d6e6ed371">SPI_SCK</a>, and <a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91a02568e07bfeeba217f0267cc19b92876">STATUS_LED</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="sleep_8h.html#ae74e924bdba3f5da2de33ca0c67a1fa2">feather_sleep()</a>.</p>
+
+</div>
+</div>
+<a id="a47191dfa6786da2498eb49ae28f8d361"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a47191dfa6786da2498eb49ae28f8d361">&#9670;&nbsp;</a></span>hardware_init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void hardware_init </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Initializes the hardware. </p>
+<p>Used at startup or when waking from sleep </p>
+
+<p class="reference">References <a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91a3d04cbc9f242fee78fec8a441f5adc48">EN_3v3</a>, <a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91af834c805dbb05ca3652f5ebb4fa45ef7">EN_5v</a>, <a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91af3773dd27ad729bada6d3379c3f44637">HEATER</a>, <a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91a534ddbbf6eacc8aac5fef71be474c64d">I2C_SCL</a>, <a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91a9d51a8c100ce438db65f67d821052ea1">I2C_SDA</a>, <a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91a1abe8e017ead2df3bf6976ab2f9d1a48">RFM95_CS</a>, <a class="el" href="sd__log_8h.html#a15e6b7e1f0fb2d1e0fe1654721bb5302">sd</a>, <a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91ae70571bf8829bf9dda22fd0633b5c990">SD_CS</a>, <a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91add37bcc343ce0aead026109fc50b2cac">SPI_MOSI</a>, <a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91a0fe4e8dd583eaf1ca7aeb51d6e6ed371">SPI_SCK</a>, and <a class="el" href="pinout_8h.html#ad3ebeb23ad60165264117c8103271e91a02568e07bfeeba217f0267cc19b92876">STATUS_LED</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="sleep_8h.html#ae74e924bdba3f5da2de33ca0c67a1fa2">feather_sleep()</a>, and <a class="el" href="sapflow__protothread_8ino.html#a4fc01d736fe50cf5b977f755b675f11d">setup()</a>.</p>
 
 </div>
 </div>

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['i2c_5fscl_119',['I2C_SCL',['../pinout_8h.html#ad3ebeb23ad60165264117c8103271e91a534ddbbf6eacc8aac5fef71be474c64d',1,'pinout.h']]],
-  ['i2c_5fsda_120',['I2C_SDA',['../pinout_8h.html#ad3ebeb23ad60165264117c8103271e91a9d51a8c100ce438db65f67d821052ea1',1,'pinout.h']]]
+  ['en_5f3v3_130',['EN_3v3',['../pinout_8h.html#ad3ebeb23ad60165264117c8103271e91a3d04cbc9f242fee78fec8a441f5adc48',1,'pinout.h']]],
+  ['en_5f5v_131',['EN_5v',['../pinout_8h.html#ad3ebeb23ad60165264117c8103271e91af834c805dbb05ca3652f5ebb4fa45ef7',1,'pinout.h']]]
 ];

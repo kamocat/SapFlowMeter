@@ -1,8 +1,5 @@
 var searchData=
 [
-  ['sample_5ftimer_5fthd_106',['sample_timer_thd',['../measure_8h.html#ac1b4a8786e0684b0f63f527522e11e5e',1,'measure.h']]],
-  ['sample_5ftrigger_107',['sample_trigger',['../measure_8h.html#a5adfa4fbf2b2c72857690502d53d4332',1,'measure.h']]],
-  ['sched_5fthd_108',['sched_thd',['../schedule_8h.html#a6e749656a32870c51bf1aebf88cfd841',1,'schedule.h']]],
-  ['sd_109',['sd',['../sd__log_8h.html#a15e6b7e1f0fb2d1e0fe1654721bb5302',1,'sd_log.h']]],
-  ['sleep_110',['sleep',['../schedule_8h.html#a88fe278e9285d43b598ce0f2c1ea0672',1,'schedule.h']]]
+  ['latest_113',['latest',['../structmeasure__stack.html#a8ba5e26b8e82f3d6314f94a9ecbeae10',1,'measure_stack']]],
+  ['lower_114',['lower',['../structtemperature.html#a3f0dd1723441a9f6a97cffe9cee6ee20',1,'temperature']]]
 ];

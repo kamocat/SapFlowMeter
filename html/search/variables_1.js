@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['delta_5fthd_99',['delta_thd',['../measure_8h.html#a8ff6579d0f5410dbe20162392e32d3a4',1,'measure.h']]]
+  ['child_108',['child',['../structmeasure__stack.html#a3ac77633b2dbc43ff68710cf2f0ab103',1,'measure_stack']]]
 ];
