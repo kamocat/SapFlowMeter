@@ -24,16 +24,6 @@ void setup() {
   m2.treeID = 4;
   // Initialize the hardware
   hardware_init();
-  // Check that we have an RTC
-  if (! rtc_ds.begin()) {
-    Serial.println("Couldn't find RTC");
-  }
-  // If this is a new RTC, set the time
-  if (rtc_ds.lostPower()) {
-    Serial.println("RTC lost power, lets set the time!");
-    // Set the RTC to the date & time this sketch was compiled
-    rtc_ds.adjust(DateTime(F(__DATE__), F(__TIME__)));
-  }
   //Initialize the thread control structures
   PT_INIT(&measure2_thd);
   PT_INIT(&schedule_thd);
@@ -100,7 +90,16 @@ This function is called inside a hidden loop in the Arduino framework.
 We're using it for protothread scheduling. All the real work happens inside the protothreads.
 */
 void loop() {
-  measure(&measure2_thd, m2);  //< Actually performs measurement.
-  schedule(&schedule_thd); //< Dictates the timing of calculations
+  DateTime t = rtc_ds.now();
+  while(!Serial){
+    MARK;
+  }
+  cout<<"Awoke at "<<t.text()<<endl;
+  while(!Serial.available()){
+    cout<<rtc_ds.now().text()<<endl;
+    delay(1000);
+    MARK;
+  }
+  sleep_cycle(2, 90);
 
 }
